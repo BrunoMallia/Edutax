@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context auth="container" >
+
+
+		<!-- <Resource auth="Container"
+	          description="DB Connection"
+		 	 driverClass="org.postgresql.Driver"
+		  	maxPoolSize="10"
+		  	minPoolSize="3"
+		  	name="jdbc/Edutdb"
+		  	user="postgres"
+		  	password="admin"
+		  	factory="org.apache.naming.factory.BeanFactory"
+		  	type="com.mchange.v2.c3p0.ComboPooledDataSource"
+		  	jdbcUrl="jdbc:postgresql://localhost:5432/postgres"
+		  	unreturnedConnectionTimeout="1"
+		  	debugUnreturnedConnectionStackTraces="true" 
+		  	 />
+	 -->
+	 
+	 		   <Resource name="jdbc/Edutdb"
+        				auth="Container"
+        				type="javax.sql.DataSource"
+        				maxActive="100"
+        				maxIdle="30"
+        				maxWait="10000"
+        				driverClassName="org.postgresql.Driver"
+        				url="jdbc:postgresql://localhost:5432/postgres"
+        				username="postgres"
+        				password="admin"
+        />
+	 		
+			<Realm className="org.apache.catalina.realm.JAASRealm"  
+   				 appName="AppLoginModuleJAAS"   
+    			 userClassNames="br.com.edutax.security.principal.User"   
+    			 roleClassNames="br.com.edutax.security.principal.Role"   
+   				 debug="99"/>  
+
+
+
+</Context>

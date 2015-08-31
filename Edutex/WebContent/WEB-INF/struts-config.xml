@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_2.dtd">
+<struts-config>
+	<action-mappings>
+		
+
+		
+		<action path="/autenticacao/autenticaEmpresa" type="br.com.edutex.form.LoginEmpresaForm"  scope="session" >
+			<forward name="sucess" path="/WEB-INF/home/home.jsp" />
+			<forward name="failed" path="/WEB-INF/login.jsp" />
+		</action>
+		
+		<action path="/principal/home"  type="br.com.edutex.form.LoginEmpresaForm">
+				<forward  name="sucess" path="/WEB-INF/home/home.jsp" ></forward>
+			</action>
+			
+		<action  path="/logout" type="br.com.edutex.form.LogoutForm" >
+				<forward name="sucess" path="/Index.jsp"></forward>
+		</action>	
+			
+			<action path="/autenticacao/loginErro"  type="org.apache.struts.actions.ForwardAction" 
+			parameter="/WEB-INF/loginErro.jsp"/>	
+		
+				
+			<action path="/principal/carregaEmpresa"  type="br.com.edutex.form.LoginEmpresaAut">
+				<forward  name="sucess" path="/WEB-INF/autenticaEmpresa.jsp" ></forward>
+				<forward name="failed" path="/erros/ErrorLoadEmpresa.jsp" ></forward>
+			</action>
+		<!-- actions para  gerência de usuário -->
+		
+		<action path="/usuario/gerenciaUsuario" type="br.com.edutex.form.UsuarioForm" scope="request">
+			<forward name="success" path="/WEB-INF/pages/usuario.jsp"></forward>
+		</action>
+		
+		<action path="/usuario/gerenciaUsuarioAjax"  type="br.com.edutex.form.UsuarioFormAjax" scope="request"
+			input="/WEB-INF/pages/usuario.jsp"/>
+		
+		<!-- action para gerência de NCM -->
+		<action path="/ncm/gerenciaNcm" type="br.com.edutex.form.NcmForm" scope="request">
+			<forward name="sucesso" path="/WEB-INF/pages/NCM.jsp"></forward>
+		</action>
+		
+		<action path="/ncm/gerenciaNcmAjax" type="br.com.edutex.form.NcmFormAjax" scope="request">
+			<forward name="resultado" path="/WEB-INF/pages/NCM.jsp"></forward>
+		</action>
+	
+	
+		<!-- action para gerência de empresa -->		
+		<action path="/empresa/gerenciaEmpresa" type="br.com.edutex.form.EmpresaForm"  scope="request">
+			<forward name="sucess" path="/WEB-INF/pages/empresa.jsp"></forward>
+		</action>
+		
+		<action  path="/empresa/gerenciaEmpresaAjax" type="br.com.edutex.form.EmpresaFormAjax"
+		 scope="request" input="/WEB-INF/pages/empresa.jsp" />
+		
+		
+		<!-- action para validacao de nota fiscal -->
+		<action path="/notafiscal/validarNota" type="br.com.edutex.form.ValidarNotaForm">
+			<forward name="sucesso" path="/WEB-INF/pages/validar_nota_fiscal.jsp"></forward>
+		</action>
+		
+		<action path="/notafical/updateNotaFiscal" type="br.com.edutex.form.UploadNotaForm"  >
+			<forward name="erro" path="/WEB-INF/pages/tipo_nota_fiscal.jsp"></forward>
+			<forward name="sucesso" path="/WEB-INF/pages/tipo_nota_fiscal.jsp"></forward>
+		</action>
+		
+		<action path="/notafiscal/validaRegraFiscal" type="br.com.edutex.form.ValidarRegraForm"  >
+			<forward name="erro" path="/WEB-INF/pages/resultado_nota_fiscal.jsp"></forward>
+			<forward name="sucesso" path="/WEB-INF/pages/valida_nota_sucesso.jsp"></forward>
+		</action>
+		
+		
+			 
+		<action path="/loginErro" type="org.apache.struts.actions.ForwardAction" 
+			 parameter="/WEB-INF/loginErro.jsp" />
+		
+			 
+		<action path="/sessaoOut" type="org.apache.struts.actions.ForwardAction" 
+			 parameter="/WEB-INF/sessao.jsp" />	 
+			 
+		<action path="/principal/menu" type="org.apache.struts.actions.ForwardAction"
+		parameter="/WEB-INF/pages/menu.jsp" ></action>
+			  
+
+		
+		<action path="/gerarRelatorio" type="org.apache.struts.actions.ForwardAction"
+		parameter="/WEB-INF/pages/gerar_relatorio.jsp" ></action>
+		
+		<action path="/tipoNotaFiscal" type="org.apache.struts.actions.ForwardAction"
+		parameter="/WEB-INF/pages/tipo_nota_fiscal.jsp" ></action>
+		
+		
+	</action-mappings>
+</struts-config>
+

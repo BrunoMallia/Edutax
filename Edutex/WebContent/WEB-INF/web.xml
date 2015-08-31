@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<display-name>Edutex</display-name>
+	<error-page>
+		<error-code>408</error-code>
+		<location>/erros/408.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/erros/404.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>403</error-code>
+		<location>/erros/403.jsp</location>
+	</error-page>
+	<error-page>
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/erros/Erro.jsp</location>
+	</error-page>
+	
+	<resource-ref>          
+
+        <description>Conexao com o banco de dados Postgre</description>
+
+        <res-ref-name>jdbc/Edutdb</res-ref-name>
+
+        <res-type>javax.sql.DataSource</res-type>
+
+        <res-auth>Container</res-auth>
+
+    </resource-ref>
+
+
+
+
+	<servlet>
+		<servlet-name>action</servlet-name>
+		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+		<init-param>
+			<param-name>config</param-name>
+			<param-value>/WEB-INF/struts-config.xml</param-value>
+		</init-param>
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>2</param-value>
+		</init-param>
+		<init-param>
+			<param-name>detail</param-name>
+			<param-value>2</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>action</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+	
+	<session-config>
+		<session-timeout>15</session-timeout>
+	</session-config>
+	<welcome-file-list>
+		<welcome-file>Index.jsp</welcome-file>
+	</welcome-file-list>
+	
+  <login-config>  
+    <auth-method>FORM</auth-method>  
+    <realm-name>default</realm-name>  
+    <form-login-config>  
+        <form-login-page>/login.jsp</form-login-page>  
+        <form-error-page>/loginErro.jsp</form-error-page>  
+    </form-login-config>  
+</login-config>  
+	
+		
+	<!-- Lista de Roles -->
+	 <security-role>  
+        <description>Quando usuario estiver logado</description>  
+        <role-name>LOGADO</role-name>  
+    </security-role>  
+	<security-role>
+		<description>Quem parametriza as regras fiscais</description>
+		<role-name>Administrador</role-name>
+	</security-role>
+	<security-role>
+		<description>Quem valida nota</description>
+		<role-name>Comum</role-name>
+	</security-role>
+	
+
+	
+	
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>general attributes</web-resource-name>
+			<url-pattern>/autenticaEmpresa.do</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>LOGADO</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+		<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>paginas do menu e home</web-resource-name>
+			<url-pattern>/principal/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>LOGADO</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>autentica Empresa</web-resource-name>
+			<url-pattern>/carregaEmpresa.do</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>LOGADO</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+		<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>complementos</web-resource-name>
+			<url-pattern>/css/*</url-pattern>
+			<url-pattern>/imgs/*</url-pattern>
+		</web-resource-collection>
+	</security-constraint>
+	
+	
+	<security-constraint>
+		<display-name>menu principal</display-name>
+		<web-resource-collection>
+			<web-resource-name>menu principal</web-resource-name>
+			<url-pattern>/home.do</url-pattern> 
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>LOGADO</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+	<security-constraint>
+		<display-name>gerencia de empresa</display-name>
+		<web-resource-collection>
+			<web-resource-name>gerencia de empresa</web-resource-name>
+			<url-pattern>/empresa/*</url-pattern> 
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Administrador</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+	<security-constraint>
+		<display-name>gerencia de usuario</display-name>
+		<web-resource-collection>
+			<web-resource-name>gerencia de usuario</web-resource-name>
+			<url-pattern>/usuario/*</url-pattern> 
+			<http-method>GET</http-method>
+  		  <http-method>POST</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Administrador</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+	<security-constraint>
+		<display-name>gerencia de ncm</display-name>
+		<web-resource-collection>
+			<web-resource-name>gerencia de ncm</web-resource-name>
+			<url-pattern>/ncm/*</url-pattern> 
+
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Administrador</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+	<security-constraint>
+		<display-name>valida nota fiscal</display-name>
+		<web-resource-collection>
+			<web-resource-name>valida nota fiscal</web-resource-name>
+			<url-pattern>/notafiscal/*</url-pattern> 
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>Administrador</role-name>
+			<role-name>Comum</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+
+
+</web-app>
+
