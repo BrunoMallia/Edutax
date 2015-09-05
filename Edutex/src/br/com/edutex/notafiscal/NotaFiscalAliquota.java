@@ -155,6 +155,7 @@ public class NotaFiscalAliquota {
 				setTipoEscrita(new EscreverIPITrib());
 				break;
 		
+		
 		}
 		nodeIPI = escreveTributacao.escreverTributacaoNota(nodeIPI, notaValidadaAliquota);
 		
@@ -167,7 +168,7 @@ public class NotaFiscalAliquota {
 		NotaValidadaAliquota notaValidadaAliquota = null;
 		
 		for(Element node: nodeIPI.getChildren()) {
-		
+			
 		switch (node.getName()) {
 			case "IPITrib":
 				setTipoLeitura(new LerIPITrib());

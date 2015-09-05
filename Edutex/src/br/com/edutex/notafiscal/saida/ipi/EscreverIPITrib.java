@@ -13,10 +13,18 @@ public class EscreverIPITrib implements EscreverTributacao {
 	 * Método que escrever a tributação do IPI para a condição cst 00,49,50,99 
 	 * @see br.com.edutex.notafiscal.interfaces.EscreverTributacao#escreverTributacaoNota(org.jdom2.Element, br.com.edutex.logic.NotaValidadaAliquota)
 	 */
-	public Element escreverTributacaoNota(Element elemento,
+	public Element escreverTributacaoNota(Element element,
 			NotaValidadaAliquota notaValidadaAliquota) {
 		
-		Element elementoIPI = new Element("IPITrib", NotaFiscalUtil.getNameSpace());
+		
+		for (Element childrenElem: element.getChildren()) {
+			if (childrenElem.getName().equals("IPITrib")) 
+				element = childrenElem;
+		}
+		
+		
+		element.removeContent();
+		
 		
 		Element cst = new Element("CST", NotaFiscalUtil.getNameSpace());
 		cst.setText(notaValidadaAliquota.getCst().getNmCST());
@@ -36,15 +44,13 @@ public class EscreverIPITrib implements EscreverTributacao {
 		Element vIPI = new Element("vIPI", NotaFiscalUtil.getNameSpace());
 		vIPI.setText(String.valueOf(notaValidadaAliquota.getValorAliquota()));
 		
-		elemento.removeContent();
-		elementoIPI.addContent(cst);
-		elementoIPI.addContent(qUnid);
-		elementoIPI.addContent(vUnid);
-		elementoIPI.addContent(vIPI);
-		elemento.addContent(elementoIPI);
+	
+		element.addContent(cst);
+		element.addContent(qUnid);
+		element.addContent(vUnid);
+		element.addContent(vIPI);
 		
-		
-		return elemento;
+		return element;
 	}
 
 }

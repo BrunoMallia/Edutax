@@ -4,6 +4,7 @@
 package br.com.edutex.logic;
 
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -43,7 +45,11 @@ public class Validacao {
 	
 	@Temporal(TemporalType.DATE)
 	private Calendar dtValidacao;
-
+	
+	@OneToMany(mappedBy="validacao", cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+	private List<ValidacaoErro> validacaoErro;
+	
+	
 	/**
 	 * @return the idValidacao
 	 */
@@ -127,5 +133,51 @@ public class Validacao {
 	public void setDtValidacao(Calendar dtValidacao) {
 		this.dtValidacao = dtValidacao;
 	}
+
+	public List<ValidacaoErro> getValidacaoErro() {
+		return validacaoErro;
+	}
+
+	public void setValidacaoErro(List<ValidacaoErro> validacaoErro) {
+		this.validacaoErro = validacaoErro;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((dtValidacao == null) ? 0 : dtValidacao.hashCode());
+		result = prime * result + idValidacao;
+		result = prime * result
+				+ ((nfeInicial == null) ? 0 : nfeInicial.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Validacao other = (Validacao) obj;
+		if (dtValidacao == null) {
+			if (other.dtValidacao != null)
+				return false;
+		} else if (!dtValidacao.equals(other.dtValidacao))
+			return false;
+		if (idValidacao != other.idValidacao)
+			return false;
+		if (nfeInicial == null) {
+			if (other.nfeInicial != null)
+				return false;
+		} else if (!nfeInicial.equals(other.nfeInicial))
+			return false;
+		return true;
+	}
+
+	
 
 }

@@ -36,7 +36,6 @@ public class LerPISAliq implements LerTributacaoNota {
 				case "vBC":
 					notaValidadaAliquota.setValorBCImposto(Float.parseFloat(elementoPIS.getValue()));
 					break;
-					
 
 				case "pPIS":
 					notaValidadaAliquota.setPercentualAliquota(Float.parseFloat(elementoPIS.getValue()));

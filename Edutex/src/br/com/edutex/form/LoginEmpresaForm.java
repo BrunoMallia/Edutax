@@ -17,11 +17,15 @@ public class LoginEmpresaForm extends Action {
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		
-		int opcoesEmpresa = Integer.parseInt(request.getParameter("opcoesEmpresa"));
+		
+		String param = request.getParameter("opcoesEmpresa");
+		
+		if (param != null) {
+		int opcoesEmpresa = Integer.parseInt(param);
 		
 		Empresa emp = EmpresaDao.getInstance().getEmpresa(opcoesEmpresa);
 		request.getSession().setAttribute("empresa", emp);
-		
+		}
 		//todo 
 		//recuperar lista de empresas do login JAAS
 		

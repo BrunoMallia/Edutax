@@ -60,7 +60,7 @@
 			<forward name="sucesso" path="/WEB-INF/pages/validar_nota_fiscal.jsp"></forward>
 		</action>
 		
-		<action path="/notafical/updateNotaFiscal" type="br.com.edutex.form.UploadNotaForm"  >
+		<action path="/notafiscal/updateNotaFiscal" type="br.com.edutex.form.UploadNotaForm"  >
 			<forward name="erro" path="/WEB-INF/pages/tipo_nota_fiscal.jsp"></forward>
 			<forward name="sucesso" path="/WEB-INF/pages/tipo_nota_fiscal.jsp"></forward>
 		</action>
@@ -84,8 +84,9 @@
 			  
 
 		
-		<action path="/gerarRelatorio" type="org.apache.struts.actions.ForwardAction"
-		parameter="/WEB-INF/pages/gerar_relatorio.jsp" ></action>
+		<action path="/gerencial/gerarRelatorio" type="br.com.edutex.form.GerarRelatorioForm">
+			<forward name="sucess" path="/WEB-INF/pages/gerar_relatorio.jsp" />
+		</action>
 		
 		<action path="/tipoNotaFiscal" type="org.apache.struts.actions.ForwardAction"
 		parameter="/WEB-INF/pages/tipo_nota_fiscal.jsp" ></action>

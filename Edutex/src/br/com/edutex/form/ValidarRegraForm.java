@@ -2,6 +2,7 @@ package br.com.edutex.form;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,8 @@ import org.apache.struts.action.ActionMapping;
 
 import br.com.edutex.DAO.ImpostoNcmDao;
 import br.com.edutex.DAO.ImpostoNcmEstadoDao;
+import br.com.edutex.DAO.TipoErroDao;
+import br.com.edutex.DAO.ValidacaoDao;
 import br.com.edutex.logic.CST;
 import br.com.edutex.logic.Empresa;
 import br.com.edutex.logic.ImpostoNcm;
@@ -21,7 +24,9 @@ import br.com.edutex.logic.ImpostoNcmEstado;
 import br.com.edutex.logic.NFE;
 import br.com.edutex.logic.NotaValidadaAliquota;
 import br.com.edutex.logic.NotaValidadaItem;
+import br.com.edutex.logic.TipoErro;
 import br.com.edutex.logic.Validacao;
+import br.com.edutex.logic.ValidacaoErro;
 import br.com.edutex.notafiscal.NotaFiscal;
 import br.com.edutex.util.LogUtil;
 import br.com.edutex.util.NumeroFormato;
@@ -196,6 +201,7 @@ public class ValidarRegraForm extends Action {
 								case 1:
 									//ICMS
 									aliquotaNota.setCsosn(900);
+									aliquotaNota.getCst().setNmCST("90");
 									break;
 								case 2:	
 									//PIS
@@ -277,7 +283,7 @@ Fimse*/
 		
 		mensagem = new StringBuilder();
 		 
-		
+		List<ValidacaoErro> listaValidacaoErro = new ArrayList<ValidacaoErro>();
 		 
 		 for (NotaValidadaItem notaItemNota :validacao.getNfeInicial().getNotaValidada().getNotasValidadaItem()) {
 			 
@@ -300,6 +306,14 @@ Fimse*/
 		 		 
 		 		 if (valorIPINota > valorIPICadastrado || (valorIPINota > valorIPICadastrado + 0.01) ||
 		 				(valorIPINota < valorIPICadastrado - 0.01)) {
+		 			 ValidacaoErro validacaoErro = new ValidacaoErro();
+		 			 validacaoErro.setTxtAuxiliar("NCM do item:" + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + valorIPINota +
+		 			  " valor alíquota cadastrada: " + valorIPICadastrado + "<br/>" );
+		 			 TipoErro tipoErro = new TipoErro();
+		 			 validacaoErro.setTpErro(tipoErro);
+		 			 //validacaoErro.setTpErro(TipoErroDao.getInstance().getTipoErro(-10));
+		 			 listaValidacaoErro.add(validacaoErro);
+		 			 
 		 			 mensagem.append("<b>Nota recusada.Valor do IPI inconsistente.</b><br/> NCM do item:" + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + valorIPINota +
 		 			  " valor alíquota cadastrada: " + valorIPICadastrado + "<br/>");
 		 		 }
@@ -350,14 +364,22 @@ Fimse*/
 		 			  			}
 		 			  			
 		 			  		//BCST * VALOR ICMS		
-		 			  		float valorICMSSTCadastrado = NumeroFormato.getNumero2digitos((float) BCST * ((float)listaImpostoNcmCadastrado.get(0).getNuPercentualImposto()/100));
+		 			  		float valorICMSSTCadastrado = NumeroFormato.getNumero2digitos(BCST * ((float) listaImpostoNcmCadastrado.get(4).getNuPercentualImposto() /100));
 		 			  		
 		 			  		//BCST * AliqST - Alíquota da própria operacao
-		 			  		float icmsST = NumeroFormato.getNumero2digitos(valorICMSSTCadastrado - (notaItemNota.getNotasValidadasAliquotas().get(0).getValorBCImposto() * (notaItemNota.getNotasValidadasAliquotas().get(0).getPercentualAliquota()/100)));
+		 			  		float icmsST = NumeroFormato.getNumero2digitos(valorICMSSTCadastrado - (BCST * (notaItemNota.getNotasValidadasAliquotas().get(0).getPercentualAliquota()/100)));
 		 			  		
 		 			  		float valorAliquotaICMSSTNota = notaItemNota.getNotasValidadasAliquotas().get(0).getValorAliquotaST(); 
 		 			  		
 		 			  		if ((valorAliquotaICMSSTNota  > icmsST + 0.01) || (valorAliquotaICMSSTNota < icmsST - 0.01)) {
+		 			  		 ValidacaoErro validacaoErro = new ValidacaoErro();
+				 			 validacaoErro.setTxtAuxiliar("NCM do item:" + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + valorAliquotaICMSSTNota +
+		 				 			  " valor cadastrado: " + icmsST + "<br/>" );
+				 			 TipoErro tpErro = new TipoErro();
+				 			 tpErro.setCdTipoErro(-20);
+				 			 validacaoErro.setTpErro(tpErro);
+				 			 //validacaoErro.setTpErro(TipoErroDao.getInstance().getTipoErro(-20));
+				 			 listaValidacaoErro.add(validacaoErro);
 		 			  		 mensagem.append("<b>Nota recusada. Valor do ICMS inconsistente.</b><br/> NCM do item:" + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + valorAliquotaICMSSTNota +
 		 				 			  " valor cadastrado: " + icmsST + "<br/>");
 		 			  		}
@@ -378,6 +400,14 @@ Fimse*/
 	 			  			
 		 			  		//para cst 70 possui percentual de redução
 		 			  		if ((valorIcmsNota > valorICMSSTReduzida + 0.01) || (valorIcmsNota < valorICMSSTReduzida - 0.01)) {
+		 			  		 ValidacaoErro validacaoErro = new ValidacaoErro();
+				 			 validacaoErro.setTxtAuxiliar("NCM do item:" + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + icmsSTCadastrado +
+	 				 			  " valor cadastrado: " + valorIcmsNota + "<br/>" );
+				 			 TipoErro tpErro = new TipoErro();
+				 			 tpErro.setCdTipoErro(-30);
+				 			 validacaoErro.setTpErro(tpErro);
+				 			// validacaoErro.setTpErro(TipoErroDao.getInstance().getTipoErro(-30));
+				 			 listaValidacaoErro.add(validacaoErro);
 		 			  		 mensagem.append("<b>Nota recusada.Valor do ICMS Interestadual inconsistente.</b><br/> NCM do item:" + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + icmsSTCadastrado +
 		 				 			  " valor cadastrado: " + valorIcmsNota + "<br/>");
 		 			  		}
@@ -389,7 +419,16 @@ Fimse*/
 			 		  float valorICMSCadastrado =  NumeroFormato.getNumero2digitos((float) (valorBCIcms * (listaImpostoNcmCadastrado.get(0).getNuPercentualImposto() /100)));
 			 		  
 			 		  if ((valorIcmsNota > valorICMSCadastrado + 0.01) || (valorIcmsNota < valorICMSCadastrado - 0.01)) {
-			 		  		// inconsitência para gerar nota de complemento?
+				 			 ValidacaoErro validacaoErro = new ValidacaoErro();
+				 			 validacaoErro.setTxtAuxiliar("NCM do item: " +  notaItemNota.getNcm().getNmNCM()  + "  valor ICMS da nota " + valorIcmsNota + " valor da alíquota ICMS cadastrada: " + 
+		 		  				valorICMSCadastrado + "<br/>" );
+				 			 TipoErro tipoErro = new TipoErro();
+				 			 tipoErro.setCdTipoErro(-20);
+				 			 validacaoErro.setTpErro(tipoErro);
+				 			// validacaoErro.setTpErro(TipoErroDao.getInstance().getTipoErro(-20));
+				 			 listaValidacaoErro.add(validacaoErro);
+		 			  		
+			 			  
 		 		  		  mensagem.append("<b>Nota recusada.Valor de ICMS inconsistente.</b><br/> NCM do item: " +  notaItemNota.getNcm().getNmNCM()  + "  valor ICMS da nota " + valorIcmsNota + " valor da alíquota ICMS cadastrada: " + 
 		 		  				valorICMSCadastrado + "<br/>");
 			 			  
@@ -408,6 +447,14 @@ Fimse*/
 			 		  	float valorPISCadastrado =  NumeroFormato.getNumero2digitos((float) (notaItemNota.getNotasValidadasAliquotas().get(1).getValorBCImposto() * (listaImpostoNcmCadastrado.get(1).getNuPercentualImposto()/100)));
 			 		  	
 			 		  if ((valorPISNota > valorPISCadastrado + 0.01) || (valorPISNota < valorPISCadastrado - 0.01)) {
+			 			 ValidacaoErro validacaoErro = new ValidacaoErro();
+			 			 validacaoErro.setTxtAuxiliar("<b>Nota recusada.Valor do PIS inconsistente.</b><br/> NCM do item: " + notaItemNota.getNcm().getNmNCM() + " valor da alíquota nota: " + valorPISNota + " valor aliquota cadastrada: " +
+			 					 valorPISCadastrado + "<br/>");
+			 			 TipoErro tpErro = new TipoErro();
+			 			 tpErro.setCdTipoErro(-40);
+			 			 validacaoErro.setTpErro(tpErro);
+			 			// validacaoErro.setTpErro(TipoErroDao.getInstance().getTipoErro(-40));
+			 			 listaValidacaoErro.add(validacaoErro);
 			 			  mensagem.append("<b>Nota recusada.Valor do PIS inconsistente.</b><br/> NCM do item: " + notaItemNota.getNcm().getNmNCM() + " valor da alíquota nota: " + valorPISNota + " valor aliquota cadastrada: " +
 			 					 valorPISCadastrado + "<br/>");
 			 		  }
@@ -423,6 +470,15 @@ Fimse*/
 			 		    
 			 		    
 			 		 if ((valorCOFINSNota > valorCOFINSCadastrado + 0.01) || (valorCOFINSNota < valorCOFINSCadastrado - 0.01) ) {
+			 			 ValidacaoErro validacaoErro = new ValidacaoErro();
+			 			 validacaoErro.setTxtAuxiliar("Ncm do item: " + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + valorCOFINSNota + " valor alíquota cadastrada: " +
+			 					valorCOFINSCadastrado + "<br/>");
+			 			TipoErro tpErro = new TipoErro();
+			 			tpErro.setCdTipoErro(-50);
+			 			 validacaoErro.setTpErro(tpErro);
+			 			 
+			 			 //validacaoErro.setTpErro(TipoErroDao.getInstance().getTipoErro(-50));
+			 			 listaValidacaoErro.add(validacaoErro);
 			 			 mensagem.append("<b>Nota recusada.Valor do COFINS inconsistente.</b><br/> Ncm do item: " + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + valorCOFINSNota + " valor alíquota cadastrada: " +
 			 					valorCOFINSCadastrado + "<br/>");
 			 		 }
@@ -432,10 +488,12 @@ Fimse*/
 			 	
 		 }	 
 			 	
-			 
+			 	validacao.setValidacaoErro(listaValidacaoErro);
+			 	
 			  	 //todo: levantar como validar os valores dos impostos como ST(Substituicao Tributária)
 			 	 
 			 	  if (!getMensagem().toString().equals("")) {
+			 		  	ValidacaoDao.getInstance().salvarValidacao(validacao);
 			 		  	return false;
 			 	  }
 			 	  

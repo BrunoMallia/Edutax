@@ -8,7 +8,7 @@
 	<jsp:include page="/header/header.jsp" />
 </head>
     <body bgcolor="#f5f5f5">
-	<form id="updateNotaForm" name="updateNotaForm" action="notafiscal/updateNotaFiscal.do" enctype="multipart/form-data"  method="POST">
+	<form id="updateNotaForm" name="updateNotaForm" action="updateNotaFiscal.do" enctype="multipart/form-data"  method="POST">
 	<jsp:include page="/header/modal.jsp"></jsp:include>
 	<header class="header_home">
         <div class="header_width">
@@ -104,7 +104,7 @@
             <input type="file" name="arquivo" id="arquivo"  accept="xml" value="" />
           </div>
           <div class="">
-            <input class="bt_cancel space"  type="reset" value="cancelar" onclick="window.history.back();"/>
+            <input class="bt_cancel space"  type="reset" value="cancelar" onclick="location.href='<%=request.getContextPath()%>/principal/home.do'"/>
             <a href="tipoNotaFiscal.do" name="link so pra demonstrar a navegação!!">
             <input class="bt_generate space" name="btValidaNota" id="btValidaNota" type="submit" value="gerar" /></a>
           </div>

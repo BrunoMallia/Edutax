@@ -22,7 +22,7 @@
         <fieldset>
           <legend>Tipo de Nota Fiscal</legend>
           <div class="">
-            <form action="notafiscal/validaRegraFiscal.do" method="post">
+            <form action="validaRegraFiscal.do" method="post">
             	<div class="">
 						
 							<c:if test="${!empty erro}">
@@ -68,7 +68,7 @@
 
 						</div>
             <div class="">
-            <input class="bt_cancel space" type="reset" value="cancelar" onclick="window.history.back();"/>
+            <input class="bt_cancel space" type="reset" value="cancelar" onclick="location.href='<%=request.getContextPath()%>/principal/home.do'"/>
            		<c:if test="${empty erro}">
             		<input class="bt_generate space" type="submit" value="gerar" />
                 </c:if>

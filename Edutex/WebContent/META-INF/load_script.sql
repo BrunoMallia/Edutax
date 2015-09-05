@@ -93,3 +93,10 @@ values(1,'password',null,current_timestamp,'admin@admin.com','Administrador',1,1
 
 insert into usuarioempresa
 values(1,1);
+
+-- LISTA DE CÓDIGOS DE ERROS
+insert into tipoerro (cdtipoerro, nmtipoerro) values (-10,'IPI inconsistente na validacao da nota fiscal');
+insert into tipoerro (cdtipoerro, nmtipoerro) values (-20,'ICMS inconsistente na validacao da nota fiscal');
+insert into tipoerro (cdtipoerro, nmtipoerro) values (-30,'ICMS Interestadual inconsistente na validacao da nota fiscal');
+insert into tipoerro (cdtipoerro, nmtipoerro) values (-40,'PIS inconsistente na validacao da nota fiscal');
+insert into tipoerro (cdtipoerro, nmtipoerro) values (-50,'COFINS inconsistente na validacao da nota fiscal');

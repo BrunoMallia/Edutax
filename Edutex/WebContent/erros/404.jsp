@@ -8,12 +8,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
          
         <title>Edut Consultoria - SGCC</title>
-        <script src="../js/modernizr.js"></script> 
-        <script src="../js/jquery-2.1.3-min.js"></script>
-        <script src="../js/main.js"></script>
-        <script src="../js/util.js"></script>
-        <link href="../css/style.css" rel="stylesheet" type="text/css" />
-        <link href="../imgs/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <script src="<%=request.getContextPath()%>/js/modernizr.js"></script> 
+        <script src="<%=request.getContextPath()%>/js/jquery-2.1.3-min.js"></script>
+        <script src="<%=request.getContextPath()%>/js/main.js"></script>
+        <script src="<%=request.getContextPath()%>/js/util.js"></script>
+        <link href="<%=request.getContextPath()%>/css/style.css" rel="stylesheet" type="text/css" />
+        <link href="<%=request.getContextPath()%>/imgs/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 </head>
 
 	  

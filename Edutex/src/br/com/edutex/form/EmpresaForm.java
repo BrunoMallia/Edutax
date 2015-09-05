@@ -32,11 +32,6 @@ public class EmpresaForm extends Action {
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 	
-		if (!request.isUserInRole("Administrador")) {
-			System.out.println("você não possui permissão de acesso");
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			
-		}
 		
 		if(request.getAttribute("regimeTributario") == null ) {
 			ArrayList<RegimeTributarioEmpresa> regTrib =  (ArrayList<RegimeTributarioEmpresa>) 

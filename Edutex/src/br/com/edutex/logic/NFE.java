@@ -46,6 +46,8 @@ public class NFE implements Serializable, Cloneable {
 	@OneToOne(fetch= FetchType.EAGER, cascade = {CascadeType.PERSIST}, orphanRemoval = true)
 	@PrimaryKeyJoinColumn
 	private NotaValidada notaValidada;
+	
+	private boolean notaComplementar;
 
 	/**
 	 * @return the cdNfe
@@ -111,6 +113,14 @@ public class NFE implements Serializable, Cloneable {
 		this.notaValidada = notaValidada;
 	}
 	
+
+	public boolean isNotaComplementar() {
+		return notaComplementar;
+	}
+
+	public void setNotaComplementar(boolean notaComplementar) {
+		this.notaComplementar = notaComplementar;
+	}
 
 	public Object clone() throws CloneNotSupportedException{
 		return super.clone();

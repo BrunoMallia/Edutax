@@ -7,8 +7,8 @@
 <html> 
   <head>
 <jsp:include page="/header/header.jsp" />
- <script src="js/jquery.dataTables.min.js"></script>
-<link href="css/bootstrap-lightbox.css" rel="stylesheet" type="text/css" />
+ <script src="<%=request.getContextPath() %>/js/jquery.dataTables.min.js"></script>
+<link href="<%=request.getContextPath() %>/css/bootstrap-lightbox.css" rel="stylesheet" type="text/css" />
 <script src="<%=request.getContextPath()%>/js/ncm.js"></script>
 
  <style type="text/css">

@@ -175,7 +175,7 @@ $(document).ready(function(){
 	});
 	
 	$("#btPesquisar").click(function() {
-		var ncm = $("#ncmCampo").val();
+		var ncm = $("#ncmCampo").val().trim();
 		var resultado = "";
 		
 		$("#textContainer1").hide();

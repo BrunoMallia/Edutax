@@ -79,6 +79,7 @@ public class EscreverICMS90 implements EscreverTributacao {
 	    elementICMS.addContent(vICMSST);
 	    elementICMS.addContent(vICMSDeson);
 	    elementICMS.addContent(motDesICMS);
+	    element.addContent(elementICMS);
 	    
 	    return element;
 	}

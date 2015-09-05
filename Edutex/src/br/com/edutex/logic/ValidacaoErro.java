@@ -21,10 +21,14 @@ initialValue = 1, allocationSize = 1)
 public class ValidacaoErro {
 	
 	@Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "validacaoErro_sequence")
-	private int idValidacao;;
+	private int idValidacaoErro;;
 	
 	
-	@ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.MERGE})
+	private Validacao validacao;
+	
+	@ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	private TipoErro tpErro;
 	
 	private String txtAuxiliar;
@@ -32,15 +36,15 @@ public class ValidacaoErro {
 	/**
 	 * @return the idValidacao
 	 */
-	public int getIdValidacao() {
-		return idValidacao;
+	public int getIdValidacaoErro() {
+		return idValidacaoErro;
 	}
 
 	/**
 	 * @param idValidacao the idValidacao to set
 	 */
-	public void setIdValidacao(int idValidacao) {
-		this.idValidacao = idValidacao;
+	public void setIdValidacaoErro(int idValidacaoErro) {
+		this.idValidacaoErro = idValidacaoErro;
 	}
 
 	/**
@@ -70,6 +74,51 @@ public class ValidacaoErro {
 	public void setTxtAuxiliar(String txtAuxiliar) {
 		this.txtAuxiliar = txtAuxiliar;
 	}
+
+	public Validacao getValidacao() {
+		return validacao;
+	}
+
+	public void setValidacao(Validacao validacao) {
+		this.validacao = validacao;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + idValidacaoErro;
+		result = prime * result + ((tpErro == null) ? 0 : tpErro.hashCode());
+		result = prime * result
+				+ ((txtAuxiliar == null) ? 0 : txtAuxiliar.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ValidacaoErro other = (ValidacaoErro) obj;
+		if (idValidacaoErro != other.idValidacaoErro)
+			return false;
+		if (tpErro == null) {
+			if (other.tpErro != null)
+				return false;
+		} else if (!tpErro.equals(other.tpErro))
+			return false;
+		if (txtAuxiliar == null) {
+			if (other.txtAuxiliar != null)
+				return false;
+		} else if (!txtAuxiliar.equals(other.txtAuxiliar))
+			return false;
+		return true;
+	}
+	
+	
 	
 	
 }

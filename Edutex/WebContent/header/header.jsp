@@ -18,5 +18,5 @@
         <link href="<%=request.getContextPath()%>/css/bootstrap-lightbox.min.css" rel="stylesheet" type="text/css" />
         <link href="<%=request.getContextPath()%>/imgs/favicon.ico" rel="shortcut icon" type="image/x-icon" />
         <link rel="stylesheet" href="//code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
-		<link rel="stylesheet" href="/resources/demos/style.css">
+		<!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
 		

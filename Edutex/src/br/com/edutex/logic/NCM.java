@@ -64,7 +64,7 @@ public class NCM {
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
 	private TipoStatus tpStatus;
 	
-	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch= FetchType.EAGER)
 	private FinalidadeNfe finalidadeNfe;
 
 	/**
