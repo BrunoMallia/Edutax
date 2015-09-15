@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
  <div class="header_menu">
   <ul>
-    <li><a href="<%=request.getContextPath()%>/gerencial/gerarRelatorio.do" >Gerar Relat&oacute;rios</a></li>
+    <li><a href="<%=request.getContextPath()%>/gerencial/escolherRelatorio.do" >Gerar Relat&oacute;rios</a></li>
   </ul>
   <ul id="submenu_main">
     <li><a href="javascript:" >Gerenciar &#9660;</a>

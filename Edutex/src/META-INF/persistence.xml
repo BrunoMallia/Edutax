@@ -4,18 +4,20 @@
 		
 		<non-jta-data-source>java:comp/env/jdbc/Edutdb</non-jta-data-source>
 		
-		<!--  <provider>org.hibernate.ejb.HibernatePersistence</provider> -->  
+		<!-- <provider>org.hibernate.ejb.HibernatePersistence</provider> --> 
 		
 		
 		<properties>
 		 
-<!-- 		  	 <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres"/>
+		    <!-- <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres"/>
 			<property name="javax.persistence.jdbc.user" value="postgres"/>
 			<property name="javax.persistence.jdbc.password" value="admin"/>
 			<property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/> -->
 			<property name="hibernate.show_sql" value="true" />
   			<property name="hibernate.format_sql" value="true" />
   			<property name="hibernate.hbm2ddl.auto" value="update" />
+  			<property name="hibernate.dialect" value=" org.hibernate.dialect.PostgreSQLDialect"/>
+  			
 		</properties>
 	</persistence-unit>
 </persistence>

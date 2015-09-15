@@ -70,6 +70,7 @@ $(document).ready(function() {
       function(){$(this).removeClass("ativa")}
 
     );
+    
 
     $(this).on("click","#btAtivarUsuario",function(){
 
@@ -270,7 +271,7 @@ $(function(){
 			
 			$.ajax({
 				type: 'POST',
-				url:  contextPath + '//usuario/gerenciaUsuarioAjax.do',
+				url:  contextPath + '/usuario/gerenciaUsuarioAjax.do',
 				beforeSend: function(){
 					 $('html,body').css({'cursor':'wait'});
 				},
@@ -387,12 +388,13 @@ $(function(){
 		}
 		
 		
+		
 		if(result.length >= 1) {
 			 $("#textContainer2 span").html(result);
 			 $("#textContainer2").show();
 			 return false;
 		}
-		
+	
 		$.ajax({
 			type: 'POST',
 			url:  contextPath + '/usuario/gerenciaUsuarioAjax.do',

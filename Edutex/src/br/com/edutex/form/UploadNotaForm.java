@@ -9,16 +9,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -31,16 +28,12 @@ import org.apache.struts.action.ActionMapping;
 
 import br.com.edutex.DAO.FinalidadeNfeDao;
 import br.com.edutex.DAO.ImpostoNcmDao;
-import br.com.edutex.DAO.NcmDao;
-import br.com.edutex.DAO.NfeDao;
 import br.com.edutex.exceptions.NotaInvalidaException;
 import br.com.edutex.logic.Empresa;
 import br.com.edutex.logic.FinalidadeNfe;
 import br.com.edutex.logic.ImpostoNcm;
-import br.com.edutex.logic.NCM;
 import br.com.edutex.logic.NFE;
 import br.com.edutex.logic.NotaValidadaItem;
-import br.com.edutex.logic.Usuario;
 import br.com.edutex.logic.Validacao;
 import br.com.edutex.notafiscal.NotaFiscal;
 import br.com.edutex.util.ConfiguracaoProp;
@@ -51,6 +44,8 @@ public class UploadNotaForm extends Action {
 	
 	private String[] extensoesArray = null;
 	private  Object[] arquivoUpload;
+	
+	private static final int CODIGO_FINALIDADE_NOTACORRETIVA = 4;
 	
 	public UploadNotaForm() {
 		
@@ -219,7 +214,7 @@ public class UploadNotaForm extends Action {
 			 
 			 //alíquota ICMS
 			 if (listaImpostoNcm.get(0) != null)
-				 impostoAliquota.setAliquotaICMS(listaImpostoNcm.get(0).getNuPercentualImposto());
+				 impostoAliquota.setAliquotaICMSST(listaImpostoNcm.get(0).getNuPercentualImposto());
 			 
 			//aliquota PIS
 			 if (listaImpostoNcm.get(1) != null)
@@ -235,8 +230,7 @@ public class UploadNotaForm extends Action {
 			 
 			//alíquota ICMS Interestadua
 			 if (listaImpostoNcm.get(4) != null)
-				 impostoAliquota.setAliquotaICMSST(listaImpostoNcm.get(4).getNuPercentualImposto());
-			 
+				 impostoAliquota.setAliquotaICMS(listaImpostoNcm.get(4).getNuPercentualImposto());
 			 
 			 //percentual de redução
 			 impostoAliquota.setPercentualReducao(listaImpostoNcm.get(0).getNcm().getCsts().get(0).getNuPercentualReducao());
@@ -246,12 +240,12 @@ public class UploadNotaForm extends Action {
 		  
 		  
 		  //Persiste o objeto 
-		  Object resp = NfeDao.getInstance().salvarNfe(nfeLeitura);
+		  //Object resp = NfeDao.getInstance().salvarNfe(nfeLeitura);
 		  
-		  if (resp instanceof String) {
+	/*	  if (resp instanceof String) {
 			  request.setAttribute("erro", resp.toString());
 			 return  mapping.findForward("erro");
-		  }
+		  }*/
 		  
 		  Validacao validacao = new Validacao();
 		  
@@ -264,6 +258,8 @@ public class UploadNotaForm extends Action {
 		  if (finalidadeNota != null)
 			  validacao.setFinalidadeNfe(finalidadeNota);
 		  
+		  if (cdFinalidadeNfe == CODIGO_FINALIDADE_NOTACORRETIVA) 
+			   validacao.getNfeInicial().setNotaComplementar(true);
 		  
 		  request.getSession().setAttribute("validacaoNotaFiscal", validacao);
 		  request.setAttribute("listaImposto", listaImposto);

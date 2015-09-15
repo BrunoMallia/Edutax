@@ -38,12 +38,16 @@ public class ValidacaoDao extends AbstractDao {
 			 //validacao.setNfeGerada(manager.merge(validacao.getNfeGerada()));
 			//validacao.setValidacaoErro(manager.);
 			 
-			 for (ValidacaoErro validacaoErro: validacao.getValidacaoErro()) {
+			if (validacao.getValidacaoErro() != null) {
+				for (ValidacaoErro validacaoErro: validacao.getValidacaoErro()) {
 				 	
-				 validacaoErro.setTpErro(manager.find(TipoErro.class, validacaoErro.getTpErro().getCdTipoErro()));
-				 validacaoErro.setValidacao(validacao);
-			 }
+					 validacaoErro.setTpErro(manager.find(TipoErro.class, validacaoErro.getTpErro().getCdTipoErro()));
+					 validacaoErro.setValidacao(validacao);
+				 }
+				
+			}
 			 
+			  
 			 manager.persist(validacao);
 			 manager.flush();
 			 transaction.commit();

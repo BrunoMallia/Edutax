@@ -8,7 +8,7 @@
 	<head>
         <link href="<%=request.getContextPath()%>/css/style.css" rel="stylesheet" type="text/css" />
         <link href="<%=request.getContextPath()%>/imgs/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-
+		
 	</head>
     
     <body class="bg_login">

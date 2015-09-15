@@ -3,6 +3,7 @@ package br.com.edutex.form;
 
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,7 @@ import br.com.edutex.logic.TipoErro;
 import br.com.edutex.logic.Validacao;
 import br.com.edutex.logic.ValidacaoErro;
 import br.com.edutex.notafiscal.NotaFiscal;
+import br.com.edutex.notafiscal.util.NotaFiscalUtil;
 import br.com.edutex.util.LogUtil;
 import br.com.edutex.util.NumeroFormato;
 
@@ -77,6 +79,7 @@ public class ValidarRegraForm extends Action {
 			
 		if (!validarImpostos()) {
 				//recusa nota
+				ValidacaoDao.getInstance().salvarValidacao(validacao);
 				request.setAttribute("erro", getMensagem());
 				return mapping.findForward("erro");
 			}
@@ -86,11 +89,9 @@ public class ValidarRegraForm extends Action {
 		//gera a saída da nota fiscal
 		NotaFiscal notaFiscal = new NotaFiscal();
 		
-		NFE nfe = validacao.getNfeInicial();
+		validacao.setNfeGerada((NFE) validacao.getNfeInicial().clone());
 		
-		validacao.setNfeGerada((NFE) nfe.clone());
-		
-		
+	
 		
 		for (NotaValidadaItem notaItem: validacao.getNfeGerada().getNotaValidada().getNotasValidadaItem()) {
 				
@@ -185,8 +186,10 @@ public class ValidarRegraForm extends Action {
 		Empresa empSessao = (Empresa) request.getSession().getAttribute("empresa");
 		
 		//SE A EMPRESA FOR SIMPLES NACIONAL ALTERA BC e aliquota dependendo do tipo de imposto
-		if (empSessao.getRegimeTibutario().getCodTipoImposto() == 3) {
-			
+		//if (empSessao.getRegimeTibutario().getCodTipoImposto() == 3) {
+				
+				//este algorítimo sempre zera as alíquotas e o CST/ CSOSN
+		
 				for (NotaValidadaItem notaItem: validacao.getNfeGerada().getNotaValidada().getNotasValidadaItem()) {
 						//to do: é só para ICMS?
 					
@@ -200,8 +203,12 @@ public class ValidarRegraForm extends Action {
 							switch (aliquotaNota.getTipoImpostoAliquota().getCdTipoImposto()) {
 								case 1:
 									//ICMS
-									aliquotaNota.setCsosn(900);
-									aliquotaNota.getCst().setNmCST("90");
+									if (empSessao.getRegimeTibutario().getCodTipoImposto() == 3) {
+										aliquotaNota.getCst().setNmCST("90");
+									} else {
+										aliquotaNota.setCsosn(900);
+									}
+									
 									break;
 								case 2:	
 									//PIS
@@ -219,30 +226,22 @@ public class ValidarRegraForm extends Action {
 								default:
 									break;
 							}
+							
+							if (validacao.getFinalidadeNfe().getCdFinalidadeNfe() == 1 || validacao.getFinalidadeNfe().getCdFinalidadeNfe() == 3) {
+								//pCredSN = valor permitido para crédito da nota
+								System.out.println(aliquotaNota.getPercentualCreditoSN());
+								
+							}	
 						
 							
 						}
-						
-					
-				}
-		} else {
-			for (NotaValidadaItem notaItem: validacao.getNfeGerada().getNotaValidada().getNotasValidadaItem()) {
-			
-				for (NotaValidadaAliquota aliquotaNota:notaItem.getNotasValidadasAliquotas()) {
-							CST cst = new CST();
-							cst.setNmCST("90");
-							aliquotaNota.setCst(cst);;
-							aliquotaNota.setPercentualAliquota(0);
-							aliquotaNota.setValorAliquota(0);
-				}
 				
+				}
+	
+
 			
-		}
 			
-			if (validacao.getFinalidadeNfe().getCdFinalidadeNfe() == 1 || validacao.getFinalidadeNfe().getCdFinalidadeNfe() == 3) {
-						//pCredSN = valor permitido para crédito da nota
-			}
-	}
+
 		  
 		
 		/**
@@ -266,10 +265,17 @@ public class ValidarRegraForm extends Action {
 Fimse*/
 		
 		notaFiscal.escreverXML(validacao.getNfeGerada());
+	  	ValidacaoDao.getInstance().salvarValidacao(validacao);
 		
-		
-		request.setAttribute("sucesso", "A nota fiscal " + validacao.getNfeGerada().getNmNfe() +  "foi gerada com sucesso no diretório " + validacao.getNfeGerada().getNmFilePath());
+	  	 
+	  	if (validacao.getNfeGerada().isNotaComplementar()) {
+	  		request.setAttribute("sucesso", "A nota fiscal " + validacao.getNfeGerada().getNmNfe() +  " foi gerada com sucesso no diretório " + validacao.getNfeGerada().getNmFilePath()
+	  			+ ".Esta nota necessita de uma nota complementar");
+	  	} else {
+	  		request.setAttribute("sucesso", "A nota fiscal " + validacao.getNfeGerada().getNmNfe() +  " foi gerada com sucesso no diretório " + validacao.getNfeGerada().getNmFilePath());
+	  	}
 		  
+	  	
 		return mapping.findForward("sucesso");
 	}
 	
@@ -294,9 +300,6 @@ Fimse*/
 		  			2, notaItemNota.getNcm().getEmpresa().getCdcnpj());
 			 
 			 
-			 
-			 
-			 
 		 	 //IPI
 		 	 float valorIPINota = notaItemNota.getNotasValidadasAliquotas().get(3).getValorAliquota();
 		 	 float valorIPICadastrado  = 0;
@@ -316,7 +319,11 @@ Fimse*/
 		 			 
 		 			 mensagem.append("<b>Nota recusada.Valor do IPI inconsistente.</b><br/> NCM do item:" + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + valorIPINota +
 		 			  " valor alíquota cadastrada: " + valorIPICadastrado + "<br/>");
-		 		 }
+		 		 } else {
+		 			 if (valorIPINota < valorIPICadastrado) {
+		 			 validacao.getNfeGerada().setNotaComplementar(true);;
+		 			 }
+		 		} 
 		 	 }
 		 	
 			 	if (validacao.getNfeInicial().getNotaValidada().getIndFinal() != 1) {
@@ -364,14 +371,14 @@ Fimse*/
 		 			  			}
 		 			  			
 		 			  		//BCST * VALOR ICMS		
-		 			  		float valorICMSSTCadastrado = NumeroFormato.getNumero2digitos(BCST * ((float) listaImpostoNcmCadastrado.get(4).getNuPercentualImposto() /100));
+		 			  		float valorICMSSTCadastrado = NumeroFormato.getNumero2digitos(BCST * ((float) listaImpostoNcmCadastrado.get(0).getNuPercentualImposto() /100));
 		 			  		
 		 			  		//BCST * AliqST - Alíquota da própria operacao
-		 			  		float icmsST = NumeroFormato.getNumero2digitos(valorICMSSTCadastrado - (BCST * (notaItemNota.getNotasValidadasAliquotas().get(0).getPercentualAliquota()/100)));
+		 			  		float icmsST = NumeroFormato.getNumero2digitos(valorICMSSTCadastrado - (BCST * ((float)listaImpostoNcmCadastrado.get(4).getNuPercentualImposto()/100)));
 		 			  		
 		 			  		float valorAliquotaICMSSTNota = notaItemNota.getNotasValidadasAliquotas().get(0).getValorAliquotaST(); 
 		 			  		
-		 			  		if ((valorAliquotaICMSSTNota  > icmsST + 0.01) || (valorAliquotaICMSSTNota < icmsST - 0.01)) {
+		 			  		if (valorAliquotaICMSSTNota  > icmsST + 0.01 || valorAliquotaICMSSTNota  > icmsST - 0.01) {
 		 			  		 ValidacaoErro validacaoErro = new ValidacaoErro();
 				 			 validacaoErro.setTxtAuxiliar("NCM do item:" + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + valorAliquotaICMSSTNota +
 		 				 			  " valor cadastrado: " + icmsST + "<br/>" );
@@ -382,6 +389,11 @@ Fimse*/
 				 			 listaValidacaoErro.add(validacaoErro);
 		 			  		 mensagem.append("<b>Nota recusada. Valor do ICMS inconsistente.</b><br/> NCM do item:" + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + valorAliquotaICMSSTNota +
 		 				 			  " valor cadastrado: " + icmsST + "<br/>");
+		 			  		} else {
+		 			  			
+		 			  			if (listaImpostoNcmCadastrado.get(0).getNuPercentualImposto() > notaItemNota.getNotasValidadasAliquotas().get(0).getPercentualAliquotaST() ) {
+		 			  				validacao.getNfeInicial().setNotaComplementar(true);
+		 			  			}
 		 			  		}
 		 			  	}
 		 			  	
@@ -410,6 +422,10 @@ Fimse*/
 				 			 listaValidacaoErro.add(validacaoErro);
 		 			  		 mensagem.append("<b>Nota recusada.Valor do ICMS Interestadual inconsistente.</b><br/> NCM do item:" + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + icmsSTCadastrado +
 		 				 			  " valor cadastrado: " + valorIcmsNota + "<br/>");
+		 			  		} else {
+		 			  			if (valorIcmsNota < valorICMSSTReduzida) {
+		 			  				validacao.getNfeGerada().setNotaComplementar(true);
+		 			  			}
 		 			  		}
 		 			  		
 		 			  	}
@@ -432,6 +448,11 @@ Fimse*/
 		 		  		  mensagem.append("<b>Nota recusada.Valor de ICMS inconsistente.</b><br/> NCM do item: " +  notaItemNota.getNcm().getNmNCM()  + "  valor ICMS da nota " + valorIcmsNota + " valor da alíquota ICMS cadastrada: " + 
 		 		  				valorICMSCadastrado + "<br/>");
 			 			  
+			 		  } else {
+			 			  
+			 			  if (valorIcmsNota < valorICMSCadastrado) {
+			 				  validacao.getNfeGerada().setNotaComplementar(true);
+			 			  }
 			 		  }
 			 	 
 		 		  }
@@ -457,6 +478,10 @@ Fimse*/
 			 			 listaValidacaoErro.add(validacaoErro);
 			 			  mensagem.append("<b>Nota recusada.Valor do PIS inconsistente.</b><br/> NCM do item: " + notaItemNota.getNcm().getNmNCM() + " valor da alíquota nota: " + valorPISNota + " valor aliquota cadastrada: " +
 			 					 valorPISCadastrado + "<br/>");
+			 		  } else {
+			 			  if (valorPISNota < valorPISCadastrado) {
+			 				  validacao.getNfeGerada().setNotaComplementar(true);
+			 			  }
 			 		  }
 			 	  }
 			 	  
@@ -481,6 +506,10 @@ Fimse*/
 			 			 listaValidacaoErro.add(validacaoErro);
 			 			 mensagem.append("<b>Nota recusada.Valor do COFINS inconsistente.</b><br/> Ncm do item: " + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + valorCOFINSNota + " valor alíquota cadastrada: " +
 			 					valorCOFINSCadastrado + "<br/>");
+			 		 } else {
+			 			 if (valorCOFINSNota < valorCOFINSCadastrado) {
+			 				 validacao.getNfeInicial().setNotaComplementar(true);
+			 			 }
 			 		 }
 			 	 }
 			 	
@@ -493,7 +522,6 @@ Fimse*/
 			  	 //todo: levantar como validar os valores dos impostos como ST(Substituicao Tributária)
 			 	 
 			 	  if (!getMensagem().toString().equals("")) {
-			 		  	ValidacaoDao.getInstance().salvarValidacao(validacao);
 			 		  	return false;
 			 	  }
 			 	  

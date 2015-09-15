@@ -33,25 +33,12 @@
 	            	</h2>	
 	            	
 				<br/><br/>	            
-	               <a class="btn_login" class="header_logo_system" href="login.do"></a>
+	               <a class="btn_voltar" class="header_logo_system"  onclick="window.history.back();"></a>
             		
 	        </div>
 	        </form>
 	        </c:if>
-            <c:if test="${!empty listaEmpresas}">
-             	<form method="post" action="autenticaEmpresa.do">
-		            <div class="lgn" id="divEmpresas">
-		            	<br/><br/>
-						<h6>Selecione uma empresa:</h6>
-						<select class="options_empresa" name="opcoesEmpresa">
-								<c:forEach items="${listaEmpresas}" var="empresa" >
-									<option  value="${empresa.cdcnpj}"><c:out value="${empresa.nmEmpresa}"></c:out></option>
-								</c:forEach>			
-						</select>
-						<input type="submit" value="Entrar"/>
-					</div>
-            	</form>
-            </c:if>
+ 
             
             <br>
           

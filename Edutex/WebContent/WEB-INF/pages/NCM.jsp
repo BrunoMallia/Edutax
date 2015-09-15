@@ -180,7 +180,7 @@ var contextPath='<%=request.getContextPath()%>';
 											<table>
 												<thead>
 													<tr>
-														<th>icms (%)</th>
+														<th>icms interno (%)</th>
 														<th>icms interestadual (%)</th>
 														<th>IPI (%)</th>
 														<th>PIS (%)</th>

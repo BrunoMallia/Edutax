@@ -33,7 +33,7 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table(
 		name = "ncm",
-		uniqueConstraints = @UniqueConstraint(columnNames={"nmncm"}, name = "UN_NMNCM")
+		uniqueConstraints = @UniqueConstraint(columnNames={"nmncm", "finalidadenfe_cdfinalidadenfe"}, name = "UN_NMNCM")
 	)
 @SequenceGenerator(name="ncm_sequence", sequenceName="ncm_sequence",
 initialValue=1,allocationSize = 1)

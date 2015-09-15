@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -47,6 +48,7 @@ public class Validacao {
 	private Calendar dtValidacao;
 	
 	@OneToMany(mappedBy="validacao", cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+	@Column(nullable = true)
 	private List<ValidacaoErro> validacaoErro;
 	
 	

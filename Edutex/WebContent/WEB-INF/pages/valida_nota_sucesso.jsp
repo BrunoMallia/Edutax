@@ -28,7 +28,7 @@
 							
 				</div>
             <div class="">
-            		<input class="bt_ok space" type="submit" value="ok" />
+            		<input class="bt_ok space" type="button" value="ok" onclick="location.href='<%=request.getContextPath()%>/principal/home.do'"" />
             </div>
             </form>
           </div>

@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -256,7 +254,7 @@ public class UsuarioFormAjax extends Action {
 	 if (tpStatus != null)
 		 usu.setTpStatus(tpStatus);
 	 
-	 if (request.getParameter("cdSenha") != null) 
+	 if (request.getParameter("cdSenha") != null && !request.getParameter("cdSenha").equals("")) 
 		 usu.setCdSenha(request.getParameter("cdSenha")); 
 		 
 	 

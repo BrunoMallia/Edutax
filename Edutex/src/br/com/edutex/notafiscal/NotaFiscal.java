@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -251,6 +252,8 @@ public class NotaFiscal {
 									
 					  String nomeArquivo = NotaFiscalUtil.getNomeArquivo(nfe);
 					  nfe.setNmFilePath(nomeArquivo);
+					  nfe.setDtUpload(Calendar.getInstance());
+					  nfe.setNmNfe(NotaFiscalUtil.getNomeLogico(nfe));
 					  xmlOutput.output(document, new FileWriter(nomeArquivo));
 						
 						

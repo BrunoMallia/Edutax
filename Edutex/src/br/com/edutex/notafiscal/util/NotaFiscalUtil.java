@@ -38,6 +38,25 @@ public class NotaFiscalUtil {
 		
 	}
 	
+	
+	public static String getNomeLogico(NFE nfe) {
+		
+		StringBuilder nomeArquivo = new StringBuilder();
+		
+		
+
+		SimpleDateFormat dt = new SimpleDateFormat("yyyymmddhhmm");
+		Date data = new Date();
+		nomeArquivo.append(nfe.getCdNfe());
+		nomeArquivo.append(nfe.getNotaValidada().getNmNFornecedor());
+		nomeArquivo.append(dt.format(data));
+		nomeArquivo.append(nfe.getNotaValidada().getFinNfe());
+		nomeArquivo.append(".xml");
+		
+		return nomeArquivo.toString();
+		
+	}
+	
 	/**
 	 * Este método seta o NAMESPACE da nota fiscal
 	 * @param nameSpace

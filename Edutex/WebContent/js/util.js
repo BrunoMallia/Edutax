@@ -8,6 +8,13 @@ $.ajaxSetup({
 	});
 
 
+function validarData(data) {
+	
+	var regex = /([1-9]|0[1-9]|[1,2][0-9]|3[0,1])\/([1-9]|0[1-9]|1[0,1,2])\/\d{4}/;
+	
+	return regex.test(data);
+}
+
 /**
  * Metodos jsavascript comuns para as paginas
  */

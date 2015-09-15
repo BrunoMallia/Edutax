@@ -43,7 +43,7 @@ public class NFE implements Serializable, Cloneable {
 	
 	private Calendar dtUpload;
 	
-	@OneToOne(fetch= FetchType.EAGER, cascade = {CascadeType.PERSIST}, orphanRemoval = true)
+	@OneToOne(fetch= FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH}, orphanRemoval = true)
 	@PrimaryKeyJoinColumn
 	private NotaValidada notaValidada;
 	

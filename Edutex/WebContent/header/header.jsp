@@ -2,13 +2,16 @@
         <meta charset="UTF8">
         <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE; IE=edge; chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="Sistema fiscal para validacao de nota fiscal"  >
+
+
          
         <title>Edut Consultoria - SGCC</title>
         <script src="<%=request.getContextPath()%>/js/modernizr.js"></script> 
         <script src="<%=request.getContextPath()%>/js/jquery-2.1.3-min.js"></script>
         <script src="<%=request.getContextPath()%>/js/main.js"></script>
         <script src="<%=request.getContextPath()%>/js/util.js"></script>
-        <!-- <script src="js/bootstrap-lightbox.js"></script> -->
+        <script src="<%=request.getContextPath()%>/js/bootstrap-lightbox.js"></script>
         <script src="<%=request.getContextPath()%>/js/bootstrap-lightbox.min.js"></script>
         <script src="<%=request.getContextPath()%>/js/jquery-ui.js"></script>
         <script src="<%=request.getContextPath()%>/js/jquery.mask.js"></script>

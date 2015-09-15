@@ -4,6 +4,8 @@
 package br.com.edutex.util;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import br.com.edutax.security.principal.User;
 import br.com.edutex.logic.Usuario;
 
 /**
@@ -42,9 +45,7 @@ public class FiltroAcesso implements Filter {
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException,
 			ServletException {
 		
-			Usuario user = null;	
 		   HttpServletRequest request = (HttpServletRequest) req;
-		  
 		   HttpSession session = request.getSession();
 		   String urlLogin;
 		   
@@ -56,19 +57,29 @@ public class FiltroAcesso implements Filter {
 		   } catch (NullPointerException ponter) {
 			   urlLogin = null;
 		   }
+		   
+		   
+		   Pattern pat = Pattern.compile("^.+\\.(js|css|jpg|gif|png)$");
+		   Matcher mat = pat.matcher(urlLogin);
+		   
+		   if (mat.matches()) {
+			   chain.doFilter(req, resp);
+		   }
+		   
+		  User usuario = (User)request.getUserPrincipal();
+		   
+		  if (usuario == null) {
+			  chain.doFilter(req, resp);
+			  return;
+		  }
 	    
-	/*	   if(session.getAttribute("user") == null && (!urlLogin.equals("/login.do") && !urlLogin.equals("/autentica.do"))) { 
-		     user = (Usuario)session.getAttribute("user");
-			   request.getServletContext().getRequestDispatcher("/login.do").forward(req, resp);
-			   //request.getServletContext().getRequestDispatcher("/WEB-INF/sessao.jsp").forward(req, resp);
-			   //req.getRequestDispatcher("action.login.do")
-			   	//	.forward(req, resp);
-			   return;
-			  // response.sendRedirect("autentica");
-			   		//return;
+		  if (session.getAttribute("empresa") == null && !urlLogin.equals("/principal/carregaEmpresa.do")) {
+			   request.getServletContext().getRequestDispatcher("/principal/carregaEmpresa.do").forward(req, resp);
 			   
-		  } */
-		    
+			   
+		   }
+		   
+
 		
 		
 		chain.doFilter(req, resp);
