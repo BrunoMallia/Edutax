@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -33,6 +34,9 @@ import org.json.JSONObject;
 
 
 
+
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import br.com.edutex.DAO.EstadoDao;
 import br.com.edutex.DAO.FinalidadeNfeDao;
@@ -367,11 +371,9 @@ public class NcmFormAjax extends Action {
 		ncm.setCsts(listaCst);
 		 
 		 try {
-			 String resposta = NcmDao.getInstance().insereNcm(ncm, finalidadeCodigo);
-			 ImpostoNcm impostoNcmResp = ImpostoNcmDao.getInstance().findImpostoNcmICMS(ncm.getCdNcm());
+	
+			// ImpostoNcm impostoNcmResp = ImpostoNcmDao.getInstance().findImpostoNcmICMS(ncm.getCdNcm());
 	    	 	
-			 
-			 
 			 
 				//jSONArray = objClient.getJSONArray("listaImpostoEstado");
 				JSONObject jsobject;
@@ -384,20 +386,35 @@ public class NcmFormAjax extends Action {
 				   final JSONObject jsonObjeto = new JSONObject(request.getParameter("impostosEstado").toString());
 				    final JSONArray impEstadodata = jsonObjeto.getJSONArray("listaImpostoEstado");
 				    final int n = impEstadodata.length();
-			
-				
-				for (int i = 0 ; i < n; i++) {
-					ImpostoNcmEstado impostoNCMEstado = new ImpostoNcmEstado();
+				    
+				    List<ImpostoNcmEstado> listaImpostoNcmEstado = new ArrayList<ImpostoNcmEstado>();
+				    	
+				    	for (int i = 0 ; i < n; i++) {
 						
-					jsobject = impEstadodata.getJSONObject(i);
-					
-					Estado estado = EstadoDao.getInstance().getEstado(Integer.parseInt(jsobject.get("idEstado").toString()));
-					impostoNCMEstado.setEstado(estado);
-					impostoNCMEstado.setMva(Float.parseFloat(jsobject.getString("mva").toString()));
-					impostoNCMEstado.setMvaAjustado(Float.parseFloat(jsobject.getString("mvaAjustado")));
-					impostoNCMEstado.setImpostoNCM(impostoNcmResp);
-					ImpostoNcmEstadoDao.getInstance().inserir(impostoNCMEstado);
-				}
+								ImpostoNcmEstado impostoNCMEstado = new ImpostoNcmEstado();
+								jsobject = impEstadodata.getJSONObject(i);
+								
+								//Estado estado = EstadoDao.getInstance().getEstado(Integer.parseInt(jsobject.get("idEstado").toString()));
+								Estado estado = new Estado();
+								estado.setCdEstado(Integer.parseInt(jsobject.get("idEstado").toString()));
+								//System.out.println(Integer.parseInt(jsobject.get("idEstado").toString()));
+								impostoNCMEstado.setEstado(estado);
+								impostoNCMEstado.setMva(Float.parseFloat(jsobject.getString("mva").toString()));
+								impostoNCMEstado.setMvaAjustado(Float.parseFloat(jsobject.getString("mvaAjustado")));
+								
+								impostoNCMEstado.setImpostoNCM(ncm.getImpNcm().get(0));
+								
+								listaImpostoNcmEstado.add(impostoNCMEstado);
+								
+								//ImpostoNcmEstadoDao.getInstance().inserir(impostoNCMEstado);
+				
+							}
+				    	
+				    	
+				    	ncm.getImpNcm().get(0).setImpostosNcmEstado(listaImpostoNcmEstado);
+				
+				
+				 String resposta = NcmDao.getInstance().insereNcm(ncm, finalidadeCodigo);
 			 
 			obj.put("sucesso", resposta);
 		} catch (JSONException e) {
@@ -530,30 +547,21 @@ public class NcmFormAjax extends Action {
 		
 		try {
 			JSONObject jsobject;
-			NcmDao.getInstance().atualizar(ncm, finalidadeCodigo);
-			
 			
 			   final JSONObject jsonObjeto = new JSONObject(request.getParameter("impostosEstado").toString());
 			    final JSONArray impEstadodata = jsonObjeto.getJSONArray("listaImpostoEstado");
 			    final int n = impEstadodata.length();
-		
+			    
+			    List<ImpostoNcmEstado> listaImpostoNCMEstado = ncm.getImpNcm().get(0).getImpostosNcmEstado(); 
 			
 			for (int i = 0 ; i < n; i++) {
-				ImpostoNcmEstado impostoNCMEstado = new ImpostoNcmEstado();
-					
 				jsobject = impEstadodata.getJSONObject(i);
-				
-				Estado estado = EstadoDao.getInstance().getEstado(Integer.parseInt(jsobject.get("idEstado").toString()));
-				impostoNCMEstado.setEstado(estado);
-				impostoNCMEstado.setMva(Float.parseFloat(jsobject.getString("mva").toString()));
-				impostoNCMEstado.setMvaAjustado(Float.parseFloat(jsobject.getString("mvaAjustado")));
-				ImpostoNcm impostoNcmResp = ImpostoNcmDao.getInstance().findImpostoNcmICMS(ncm.getCdNcm());
-				//ImpostoNcmDao.getInstance().atualizar(impostoNcmResp, finalidadeCodigo);
-				impostoNCMEstado.setImpostoNCM(impostoNcmResp);
-				ImpostoNcmEstadoDao.getInstance().atualizar(impostoNCMEstado);
+				listaImpostoNCMEstado.get(i).setMva(Float.parseFloat(jsobject.getString("mva").toString()));
+				listaImpostoNCMEstado.get(i).setMvaAjustado(Float.parseFloat(jsobject.getString("mvaAjustado")));
+				//ImpostoNcmEstadoDao.getInstance().atualizar(impostoNCMEstado);
 			}
 			
-			
+			NcmDao.getInstance().atualizar(ncm, finalidadeCodigo);
 			
 			obj.put("sucesso", "NCM atualizado com sucesso");
 		} catch (Exception e) {

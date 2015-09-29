@@ -16,6 +16,8 @@ public class EscreverICMSSN900 implements EscreverTributacao {
 			NotaValidadaAliquota notaValidadaAliquota) {
 
 		
+	element.removeContent();
+	
 	Element elementICMS = new Element("ICMSSN"+ notaValidadaAliquota.getCsosn(),NotaFiscalUtil.getNameSpace());
 
 	

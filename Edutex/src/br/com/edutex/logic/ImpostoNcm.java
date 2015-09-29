@@ -5,13 +5,14 @@ package br.com.edutex.logic;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 
 
@@ -39,6 +40,8 @@ public class ImpostoNcm implements Serializable  {
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
 	private FinalidadeNfe finalidadeNfe;
 	
+	
+	
 	@Column(nullable= false)
 	private double nuPercentualImposto;
 	
@@ -52,9 +55,9 @@ public class ImpostoNcm implements Serializable  {
 	private TipoStatus tpStatus;
 
 	
-/*	@Column(nullable = true)
-	@OneToMany(mappedBy="impostoNCM",  cascade = {CascadeType.ALL})
-	private List<ImpostoNcmEstado> impostosNcmEstado;*/
+	@Column(nullable = true)
+	@OneToMany(mappedBy="impostoNCM", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+	private List<ImpostoNcmEstado> impostosNcmEstado;
 	
 	
 	/**
@@ -117,9 +120,7 @@ public class ImpostoNcm implements Serializable  {
 		this.tipoImposto = tipoImposto;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
+	 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -173,37 +174,12 @@ public class ImpostoNcm implements Serializable  {
 		this.tpStatus = tpStatus;
 	}
 
-	/*public List<ImpostoNcmEstado> getImpostosNcmEstado() {
+	public List<ImpostoNcmEstado> getImpostosNcmEstado() {
 		return impostosNcmEstado;
 	}
 
 	public void setImpostosNcmEstado(List<ImpostoNcmEstado> impostosNcmEstado) {
 		this.impostosNcmEstado = impostosNcmEstado;
-	}*/
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ImpostoNcm other = (ImpostoNcm) obj;
-		if (ncm == null) {
-			if (other.ncm != null)
-				return false;
-		} else if (!ncm.equals(other.ncm))
-			return false;
-		if (tipoImposto == null) {
-			if (other.tipoImposto != null)
-				return false;
-		} else if (!tipoImposto.equals(other.tipoImposto))
-			return false;
-		return true;
 	}
 
 

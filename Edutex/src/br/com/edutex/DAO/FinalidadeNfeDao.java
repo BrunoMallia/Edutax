@@ -6,7 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 
 import br.com.edutex.logic.FinalidadeNfe;
-import br.com.edutex.logic.Usuario;
 
 /**
  * Classe que representa os metodos de persistencia

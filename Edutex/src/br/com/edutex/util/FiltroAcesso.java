@@ -73,10 +73,9 @@ public class FiltroAcesso implements Filter {
 			  return;
 		  }
 	    
-		  if (session.getAttribute("empresa") == null && !urlLogin.equals("/principal/carregaEmpresa.do")) {
+		  if (session.getAttribute("empresa") == null && !urlLogin.equals("/home.do") && !urlLogin.equals("/carregaEmpresa.do")) {
 			   request.getServletContext().getRequestDispatcher("/principal/carregaEmpresa.do").forward(req, resp);
-			   
-			   
+			   return;
 		   }
 		   
 

@@ -4,7 +4,9 @@
 package br.com.edutex.DAO;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -14,10 +16,14 @@ import javax.persistence.PersistenceException;
 
 import org.hibernate.exception.ConstraintViolationException;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 import br.com.edutex.logic.CST;
 import br.com.edutex.logic.Empresa;
+import br.com.edutex.logic.Estado;
 import br.com.edutex.logic.FinalidadeNfe;
 import br.com.edutex.logic.ImpostoNcm;
+import br.com.edutex.logic.ImpostoNcmEstado;
 import br.com.edutex.logic.NCM;
 import br.com.edutex.logic.TipoImposto;
 import br.com.edutex.logic.TipoStatus;
@@ -76,6 +82,7 @@ public class NcmDao extends AbstractDao {
 			ncm.setFinalidadeNfe(manager.find(FinalidadeNfe.class, cdFinalidadeNfe));
 			ncm.setDtCriacao(Calendar.getInstance());
 			
+			
 			Empresa emp = manager.merge(ncm.getEmpresa());
 			
 			TipoStatus tpStatus = manager.find(TipoStatus.class, 1);
@@ -85,12 +92,23 @@ public class NcmDao extends AbstractDao {
 			cst.setTpStatus(tpStatus);
 			cst.setNcm(ncm);
 			
-			for (ImpostoNcm imposto: ncm.getImpNcm()) {
-				imposto.setFinalidadeNfe(manager.find(FinalidadeNfe.class, cdFinalidadeNfe));
-				imposto.setTipoImposto(manager.find(TipoImposto.class, imposto.getTipoImposto().getCdTipoImposto()));
-				imposto.setTpStatus(tpStatus);
-				imposto.setEmpresa(emp);
-				imposto.setNcm(ncm);
+			for (int j = 0; j < ncm.getImpNcm().size(); j++) {
+				
+				ncm.getImpNcm().get(j).setFinalidadeNfe(manager.find(FinalidadeNfe.class, cdFinalidadeNfe));
+				ncm.getImpNcm().get(j).setTipoImposto(manager.find(TipoImposto.class, ncm.getImpNcm().get(j).getTipoImposto().getCdTipoImposto()));
+				ncm.getImpNcm().get(j).setTpStatus(tpStatus);
+				ncm.getImpNcm().get(j).setEmpresa(emp);
+				ncm.getImpNcm().get(j).setNcm(ncm);
+				
+		
+				
+				if (j == 0) {
+					for (int i = 0 ;i < ncm.getImpNcm().get(j).getImpostosNcmEstado().size(); i++) {
+						ncm.getImpNcm().get(j).getImpostosNcmEstado().get(i).setEstado(manager.find(Estado.class,
+								ncm.getImpNcm().get(j).getImpostosNcmEstado().get(i).getEstado().getCdEstado()));
+					}
+				}
+				
 				
 			}
 			
@@ -137,8 +155,11 @@ public class NcmDao extends AbstractDao {
 			// por padrão o status é ativo na atualização
 			 //ncm  = manager.merge(ncm);
 			
-			 
-			//manager.refresh(ncm);
+			for (ImpostoNcmEstado impostoEstado: ncm.getImpNcm().get(0).getImpostosNcmEstado()) {
+				 manager.merge(impostoEstado);
+			
+			}
+			
 			
 			manager.merge(ncm);
 			transaction.commit();

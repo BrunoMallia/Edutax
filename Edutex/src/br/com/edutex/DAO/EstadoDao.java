@@ -37,7 +37,7 @@ public class EstadoDao extends AbstractDao {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Estado> listaEstados() {
-		String query = "SELECT est from Estado est ";
+		String query = "SELECT est from Estado est order by cdEstado";
 		
 		return  (ArrayList<Estado>) getEntityManager().createQuery(query)
 				.getResultList();

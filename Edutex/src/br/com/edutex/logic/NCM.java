@@ -156,7 +156,7 @@ public class NCM {
 	/**
 	 * @return the impNcm
 	 */
-	public Collection<ImpostoNcm> getImpNcm() {
+	public List<ImpostoNcm> getImpNcm() {
 		return impNcm;
 	}
 

@@ -71,7 +71,7 @@ public class ValidarRegraForm extends Action {
 		*/
 		
 		//para o caso da finalidade da nota for consumo final
-		if (validacao != null && validacao.getFinalidadeNfe().getCdFinalidadeNfe() == 2) {
+		if (validacao != null) {
 			
 			//cNF corresponde ao Código Fiscal da Nota
 			//lê cnf da nota.
@@ -204,9 +204,9 @@ public class ValidarRegraForm extends Action {
 								case 1:
 									//ICMS
 									if (empSessao.getRegimeTibutario().getCodTipoImposto() == 3) {
-										aliquotaNota.getCst().setNmCST("90");
-									} else {
 										aliquotaNota.setCsosn(900);
+									} else {
+										aliquotaNota.getCst().setNmCST("90");
 									}
 									
 									break;
@@ -229,7 +229,7 @@ public class ValidarRegraForm extends Action {
 							
 							if (validacao.getFinalidadeNfe().getCdFinalidadeNfe() == 1 || validacao.getFinalidadeNfe().getCdFinalidadeNfe() == 3) {
 								//pCredSN = valor permitido para crédito da nota
-								System.out.println(aliquotaNota.getPercentualCreditoSN());
+								
 								
 							}	
 						
@@ -297,7 +297,7 @@ Fimse*/
 			 	
 				//impostos cadastrados
 			 List<ImpostoNcm> listaImpostoNcmCadastrado = ImpostoNcmDao.getInstance().buscarImpostoNcm(notaItemNota.getNcm().getNmNCM(),
-		  			2, notaItemNota.getNcm().getEmpresa().getCdcnpj());
+					 validacao.getFinalidadeNfe().getCdFinalidadeNfe(), notaItemNota.getNcm().getEmpresa().getCdcnpj());
 			 
 			 
 		 	 //IPI
@@ -378,7 +378,8 @@ Fimse*/
 		 			  		
 		 			  		float valorAliquotaICMSSTNota = notaItemNota.getNotasValidadasAliquotas().get(0).getValorAliquotaST(); 
 		 			  		
-		 			  		if (valorAliquotaICMSSTNota  > icmsST + 0.01 || valorAliquotaICMSSTNota  > icmsST - 0.01) {
+		 			  		
+		 			  		if (NumeroFormato.getNumero2digitos((valorAliquotaICMSSTNota - icmsST)) < -0.01) {
 		 			  		 ValidacaoErro validacaoErro = new ValidacaoErro();
 				 			 validacaoErro.setTxtAuxiliar("NCM do item:" + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + valorAliquotaICMSSTNota +
 		 				 			  " valor cadastrado: " + icmsST + "<br/>" );
@@ -391,8 +392,9 @@ Fimse*/
 		 				 			  " valor cadastrado: " + icmsST + "<br/>");
 		 			  		} else {
 		 			  			
-		 			  			if (listaImpostoNcmCadastrado.get(0).getNuPercentualImposto() > notaItemNota.getNotasValidadasAliquotas().get(0).getPercentualAliquotaST() ) {
+		 			  			if (icmsST > valorAliquotaICMSSTNota) {
 		 			  				validacao.getNfeInicial().setNotaComplementar(true);
+		 			  				mensagem.append("<b>Uma nota complementar será necessária.</b>");
 		 			  			}
 		 			  		}
 		 			  	}
@@ -409,9 +411,8 @@ Fimse*/
 	 			  			float valorICMSSTReduzida = NumeroFormato.getNumero2digitos((float) BCSTReduzida * (notaItemNota.getNotasValidadasAliquotas().get(0).getPercentualAliquotaST()/100));
 	 			  			//float icmsSTRed = valorICMSSTReduzida - (notaItemNota.getNotasValidadasAliquotas().get(0).getValorBCImposto() * (notaItemNota.getNotasValidadasAliquotas().get(0).getPercentualAliquota()/100));
 		 			  		
-	 			  			
 		 			  		//para cst 70 possui percentual de redução
-		 			  		if ((valorIcmsNota > valorICMSSTReduzida + 0.01) || (valorIcmsNota < valorICMSSTReduzida - 0.01)) {
+		 			  		if (NumeroFormato.getNumero2digitos((valorIcmsNota - valorICMSSTReduzida)) < -0.01) {
 		 			  		 ValidacaoErro validacaoErro = new ValidacaoErro();
 				 			 validacaoErro.setTxtAuxiliar("NCM do item:" + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + icmsSTCadastrado +
 	 				 			  " valor cadastrado: " + valorIcmsNota + "<br/>" );
@@ -431,10 +432,10 @@ Fimse*/
 		 			  	}
 		 			  	
 		 		  } else {
-		 			 float valorBCIcms =  (float) (notaItemNota.getValorBrutoProduto() - valorIPICadastrado) - (percentualReducao /100 * notaItemNota.getValorBrutoProduto());
+		 			 float valorBCIcms =  (float) (notaItemNota.getValorBrutoProduto()) - (percentualReducao /100 * notaItemNota.getValorBrutoProduto());
 			 		  float valorICMSCadastrado =  NumeroFormato.getNumero2digitos((float) (valorBCIcms * (listaImpostoNcmCadastrado.get(0).getNuPercentualImposto() /100)));
-			 		  
-			 		  if ((valorIcmsNota > valorICMSCadastrado + 0.01) || (valorIcmsNota < valorICMSCadastrado - 0.01)) {
+			 		 
+			 		  if (NumeroFormato.getNumero2digitos((valorIcmsNota - valorICMSCadastrado)) < -0.01) {
 				 			 ValidacaoErro validacaoErro = new ValidacaoErro();
 				 			 validacaoErro.setTxtAuxiliar("NCM do item: " +  notaItemNota.getNcm().getNmNCM()  + "  valor ICMS da nota " + valorIcmsNota + " valor da alíquota ICMS cadastrada: " + 
 		 		  				valorICMSCadastrado + "<br/>" );
@@ -450,8 +451,8 @@ Fimse*/
 			 			  
 			 		  } else {
 			 			  
-			 			  if (valorIcmsNota < valorICMSCadastrado) {
-			 				  validacao.getNfeGerada().setNotaComplementar(true);
+			 			  if (valorIcmsNota > valorICMSCadastrado) {
+			 				  validacao.getNfeInicial().setNotaComplementar(true);
 			 			  }
 			 		  }
 			 	 
@@ -467,7 +468,7 @@ Fimse*/
 			 		  
 			 		  	float valorPISCadastrado =  NumeroFormato.getNumero2digitos((float) (notaItemNota.getNotasValidadasAliquotas().get(1).getValorBCImposto() * (listaImpostoNcmCadastrado.get(1).getNuPercentualImposto()/100)));
 			 		  	
-			 		  if ((valorPISNota > valorPISCadastrado + 0.01) || (valorPISNota < valorPISCadastrado - 0.01)) {
+			 		  if (NumeroFormato.getNumero2digitos((valorPISNota - valorPISCadastrado)) < -0.01) {
 			 			 ValidacaoErro validacaoErro = new ValidacaoErro();
 			 			 validacaoErro.setTxtAuxiliar("<b>Nota recusada.Valor do PIS inconsistente.</b><br/> NCM do item: " + notaItemNota.getNcm().getNmNCM() + " valor da alíquota nota: " + valorPISNota + " valor aliquota cadastrada: " +
 			 					 valorPISCadastrado + "<br/>");
@@ -493,8 +494,7 @@ Fimse*/
 			 		    float valorCOFINSCadastrado = NumeroFormato.getNumero2digitos((float) (notaItemNota.getValorBrutoProduto() * (listaImpostoNcmCadastrado.get(2).getNuPercentualImposto()/100)));
 			 		    
 			 		    
-			 		    
-			 		 if ((valorCOFINSNota > valorCOFINSCadastrado + 0.01) || (valorCOFINSNota < valorCOFINSCadastrado - 0.01) ) {
+			 		 if (NumeroFormato.getNumero2digitos((valorCOFINSNota - valorCOFINSCadastrado)) < -0.01) {
 			 			 ValidacaoErro validacaoErro = new ValidacaoErro();
 			 			 validacaoErro.setTxtAuxiliar("Ncm do item: " + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + valorCOFINSNota + " valor alíquota cadastrada: " +
 			 					valorCOFINSCadastrado + "<br/>");
@@ -521,7 +521,7 @@ Fimse*/
 			 	
 			  	 //todo: levantar como validar os valores dos impostos como ST(Substituicao Tributária)
 			 	 
-			 	  if (!getMensagem().toString().equals("")) {
+			 	  if (!getMensagem().toString().equals("") && !validacao.getNfeInicial().isNotaComplementar()) {
 			 		  	return false;
 			 	  }
 			 	  

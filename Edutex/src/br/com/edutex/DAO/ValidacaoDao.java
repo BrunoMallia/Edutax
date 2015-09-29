@@ -49,6 +49,7 @@ public class ValidacaoDao extends AbstractDao {
 			 
 			  
 			 manager.persist(validacao);
+			 
 			 manager.flush();
 			 transaction.commit();
 		 }  catch(Exception e){

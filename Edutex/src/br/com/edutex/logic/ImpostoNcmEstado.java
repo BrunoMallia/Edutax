@@ -8,6 +8,8 @@ import java.io.Serializable;
 import javax.persistence.CascadeType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 
@@ -33,6 +35,7 @@ public class ImpostoNcmEstado implements Serializable {
 	@EmbeddedId
 	@ManyToOne (cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	private Estado estado;
+	
 	
 	private float mva;
 	
@@ -86,6 +89,45 @@ public class ImpostoNcmEstado implements Serializable {
 
 	public void setMva(float mva) {
 		this.mva = mva;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((estado == null) ? 0 : estado.hashCode());
+		result = prime * result
+				+ ((impostoNCM == null) ? 0 : impostoNCM.hashCode());
+		result = prime * result + Float.floatToIntBits(mva);
+		result = prime * result + Float.floatToIntBits(mvaAjustado);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ImpostoNcmEstado other = (ImpostoNcmEstado) obj;
+		if (estado == null) {
+			if (other.estado != null)
+				return false;
+		} else if (!estado.equals(other.estado))
+			return false;
+		if (impostoNCM == null) {
+			if (other.impostoNCM != null)
+				return false;
+		} else if (!impostoNCM.equals(other.impostoNCM))
+			return false;
+		if (Float.floatToIntBits(mva) != Float.floatToIntBits(other.mva))
+			return false;
+		if (Float.floatToIntBits(mvaAjustado) != Float
+				.floatToIntBits(other.mvaAjustado))
+			return false;
+		return true;
 	}
 
 	

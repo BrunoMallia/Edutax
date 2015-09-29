@@ -3,7 +3,7 @@
 <Context auth="container" >
 
 
-		<!-- <Resource auth="Container"
+<!-- 		 <Resource auth="Container"
 	          description="DB Connection"
 		 	 driverClass="org.postgresql.Driver"
 		  	maxPoolSize="10"
@@ -16,10 +16,10 @@
 		  	jdbcUrl="jdbc:postgresql://localhost:5432/postgres"
 		  	unreturnedConnectionTimeout="1"
 		  	debugUnreturnedConnectionStackTraces="true" 
-		  	 />
-	 -->
+		  	 /> -->
 	 
-	 		   <Resource name="jdbc/Edutdb"
+	 
+	 	 	   <Resource name="jdbc/Edutdb"
         				auth="Container"
         				type="javax.sql.DataSource"
         				maxActive="100"
@@ -29,7 +29,7 @@
         				url="jdbc:postgresql://localhost:5432/postgres"
         				username="postgres"
         				password="admin"
-        />
+        /> 
 	 		
 			<Realm className="org.apache.catalina.realm.JAASRealm"  
    				 appName="AppLoginModuleJAAS"   
