@@ -25,13 +25,24 @@
             <form action="menu.do" method="get">
             	<div class="">
 						<span>${sucesso}</span>
-							
+						<c:if test="${!empty sucesso}">
+							<script  type="text/javascript" >
+								$(document).ready(function(){
+									document.forms['downloadNotFiscal'].submit();	
+								})
+								
+								
+							</script>
+						
+						</c:if>
 				</div>
             <div class="">
             		<input class="bt_ok space" type="button" value="ok" onclick="location.href='<%=request.getContextPath()%>/principal/home.do'"" />
             </div>
             </form>
           </div>
+          <form id="downloadNotFiscal"  action="downloadNotaFiscal.do" method="post" enctype="multipart/form-data">
+          </form>
         </fieldset>
       </div>
       </div>

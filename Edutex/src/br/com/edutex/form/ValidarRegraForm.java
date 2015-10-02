@@ -2,12 +2,18 @@ package br.com.edutex.form;
 
 
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+
+
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
@@ -16,7 +22,6 @@ import org.apache.struts.action.ActionMapping;
 
 import br.com.edutex.DAO.ImpostoNcmDao;
 import br.com.edutex.DAO.ImpostoNcmEstadoDao;
-import br.com.edutex.DAO.TipoErroDao;
 import br.com.edutex.DAO.ValidacaoDao;
 import br.com.edutex.logic.CST;
 import br.com.edutex.logic.Empresa;
@@ -29,7 +34,6 @@ import br.com.edutex.logic.TipoErro;
 import br.com.edutex.logic.Validacao;
 import br.com.edutex.logic.ValidacaoErro;
 import br.com.edutex.notafiscal.NotaFiscal;
-import br.com.edutex.notafiscal.util.NotaFiscalUtil;
 import br.com.edutex.util.LogUtil;
 import br.com.edutex.util.NumeroFormato;
 
@@ -61,6 +65,7 @@ public class ValidarRegraForm extends Action {
 			HttpServletResponse response) throws Exception {
 		
 		setValidacao((Validacao) request.getSession().getAttribute("validacaoNotaFiscal")) ;
+		OutputStream outPutDownload = null;
      
 		/*Se a finalidade da nota for complemento
 		 campo finNFE corresponde  a finalidade da nota
@@ -264,7 +269,7 @@ public class ValidarRegraForm extends Action {
 	fimse
 Fimse*/
 		
-		notaFiscal.escreverXML(validacao.getNfeGerada());
+		outPutDownload = notaFiscal.escreverXML(validacao.getNfeGerada());
 	  	ValidacaoDao.getInstance().salvarValidacao(validacao);
 		
 	  	 
@@ -274,8 +279,17 @@ Fimse*/
 	  	} else {
 	  		request.setAttribute("sucesso", "A nota fiscal " + validacao.getNfeGerada().getNmNfe() +  " foi gerada com sucesso no diretório " + validacao.getNfeGerada().getNmFilePath());
 	  	}
-		  
-	  	
+       
+	  	//request.getSession(true).setAttribute("streamDownload", new String(byteArrayOutput.toByteArray()));
+        request.getSession(true).setAttribute("streamDownload", outPutDownload);
+        
+        
+        /*ServletOutputStream servletOutput = response.getOutputStream();
+        
+        byteArrayOutput.writeTo(servletOutput);
+        servletOutput.flush();
+        servletOutput.close();
+		*/  
 		return mapping.findForward("sucesso");
 	}
 	

@@ -99,11 +99,7 @@ public class GerarRelatorioForm extends Action {
 	            rs = statement.executeQuery();  
 	            JRResultSetDataSource jrDataSource = new JRResultSetDataSource(rs);
 	            
-	             
-	            
 	            JasperPrint jp = JasperFillManager.fillReport(jasperReport, new HashMap(),jrDataSource);
-	            OutputStream outputStream = null;
-	            
 	            
 	            ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
 	            byteOut.write(JasperExportManager.exportReportToPdf(jp));

@@ -1,8 +1,10 @@
 package br.com.edutex.notafiscal;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -44,10 +46,11 @@ public class NotaFiscal {
 	 * @throws NumberFormatException
 	 * @throws IOException
 	 */
-	public void escreverXML(NFE nfe) throws NotaInvalidaException, NumberFormatException, IOException {
+	public OutputStream escreverXML(NFE nfe) throws NotaInvalidaException, NumberFormatException, IOException {
 
 		SAXBuilder builder = new SAXBuilder();
 		File arquivo = new File(nfe.getNmFilePath());
+		  OutputStream outPutStream = null;
 		
 		if (arquivo.isFile()) {
 			try {
@@ -250,12 +253,17 @@ public class NotaFiscal {
 		
 					   xmlOutput.setFormat(Format.getPrettyFormat());
 									
+					   
 					  String nomeArquivo = NotaFiscalUtil.getNomeArquivo(nfe);
 					  nfe.setNmFilePath(nomeArquivo);
 					  nfe.setDtUpload(Calendar.getInstance());
 					  nfe.setNmNfe(NotaFiscalUtil.getNomeLogico(nfe));
 					  xmlOutput.output(document, new FileWriter(nomeArquivo));
-						
+					  outPutStream = new ByteArrayOutputStream();
+					  xmlOutput.output(document, outPutStream);
+					  outPutStream.close();
+					  
+					  return outPutStream;
 						
 					}	
 					
@@ -270,6 +278,7 @@ public class NotaFiscal {
 		} else {
 			throw new IllegalArgumentException("Arquivo da nota fiscal não encontrado");
 		}
+		return null;
 	
 
 	}
