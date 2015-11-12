@@ -1,6 +1,7 @@
 package br.com.edutex.notafiscal;
 
 
+
 import org.jdom2.Element;
 
 import br.com.edutex.logic.NotaValidadaAliquota;
@@ -31,6 +32,7 @@ import br.com.edutex.notafiscal.entrada.pis.LerPISNT;
 import br.com.edutex.notafiscal.entrada.pis.LerPISOutr;
 import br.com.edutex.notafiscal.entrada.pis.LerPISQtde;
 import br.com.edutex.notafiscal.interfaces.EscreverTributacao;
+import br.com.edutex.notafiscal.interfaces.EscreverTributacaoTotal;
 import br.com.edutex.notafiscal.interfaces.LerTributacaoNota;
 import br.com.edutex.notafiscal.saida.cofins.EscreverCOFINSAliq;
 import br.com.edutex.notafiscal.saida.cofins.EscreverCOFINSNT;
@@ -51,6 +53,7 @@ import br.com.edutex.notafiscal.saida.icms.EscreverICMSSN201;
 import br.com.edutex.notafiscal.saida.icms.EscreverICMSSN202;
 import br.com.edutex.notafiscal.saida.icms.EscreverICMSSN500;
 import br.com.edutex.notafiscal.saida.icms.EscreverICMSSN900;
+import br.com.edutex.notafiscal.saida.icms.EscreverICMSTotal;
 import br.com.edutex.notafiscal.saida.ipi.EscreverIPINT;
 import br.com.edutex.notafiscal.saida.ipi.EscreverIPITrib;
 import br.com.edutex.notafiscal.saida.pis.EscreverPISNT;
@@ -63,6 +66,8 @@ public class NotaFiscalAliquota {
 	EscreverTributacao escreveTributacao;
 	
 	LerTributacaoNota lerTributacao;
+	
+	EscreverTributacaoTotal escreverTributacaoTotal;
 	
 	
 	/**
@@ -165,11 +170,12 @@ public class NotaFiscalAliquota {
 	
 	public NotaValidadaAliquota escolherLeituraTributacaoIPI(Element nodeIPI) {
 		
-		NotaValidadaAliquota notaValidadaAliquota = null;
+		NotaValidadaAliquota notaValidadaAliquota = new NotaValidadaAliquota();
 		
 		for(Element node: nodeIPI.getChildren()) {
 			
 		switch (node.getName()) {
+		
 			case "IPITrib":
 				setTipoLeitura(new LerIPITrib());
 				notaValidadaAliquota = tentarLer(node);
@@ -179,9 +185,20 @@ public class NotaFiscalAliquota {
 				setTipoLeitura(new LerIPINT());
 				notaValidadaAliquota = tentarLer(node);
 				break;
+				
+			
 		}
 		
 	}
+		
+		for(Element node: nodeIPI.getChildren()) {
+			switch (node.getName()) {
+			
+				case "cEnq":
+					notaValidadaAliquota.setCodigoEnquadramento(Integer.parseInt(node.getValue()));
+					break;
+			}
+		}
 		
 		
 		return notaValidadaAliquota;
@@ -736,4 +753,17 @@ public class NotaFiscalAliquota {
 		return tentarLer(node);
 	
 	}
+
+
+	public EscreverTributacaoTotal getEscreverTributacaoTotal() {
+		return escreverTributacaoTotal;
+	}
+
+
+	public void setEscreverTributacaoTotal(
+			EscreverTributacaoTotal escreverTributacaoTotal) {
+		this.escreverTributacaoTotal = escreverTributacaoTotal;
+	}
+
+
 }

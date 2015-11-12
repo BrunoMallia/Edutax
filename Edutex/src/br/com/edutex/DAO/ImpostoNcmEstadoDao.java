@@ -106,12 +106,14 @@ public class ImpostoNcmEstadoDao  extends AbstractDao{
 	 * @param cdEstado
 	 * @return
 	 */
-	public ImpostoNcmEstado getMVAjustadoImposto(String ncm,int cdEstado) throws javax.persistence.NoResultException {
-		 String query = "SELECT imp from ImpostoNcmEstado AS imp WHERE imp.impostoNCM.ncm.nmncm = :ncm and imp.estado.cdEstado = :cdEstado";
+	public ImpostoNcmEstado getMVAjustadoImposto(String ncm,int cdEstado, int finalidade) throws javax.persistence.NoResultException {
+		 String query = "SELECT imp from ImpostoNcmEstado AS imp WHERE imp.impostoNCM.ncm.nmncm = :ncm and imp.estado.cdEstado = :cdEstado and imp.impostoNCM.finalidadeNfe.cdFinalidadeNfe= :finalidade";
 		 
 		 return   (ImpostoNcmEstado) getEntityManager().createQuery(query)
 					.setParameter("ncm", ncm)
-					.setParameter("cdEstado",cdEstado).getSingleResult();
+					.setParameter("cdEstado",cdEstado)
+					.setParameter("finalidade", finalidade)
+					.getSingleResult();
 			 
 	}
 	

@@ -17,7 +17,7 @@
 		  	unreturnedConnectionTimeout="1"
 		  	debugUnreturnedConnectionStackTraces="true" 
 		  	 /> -->
-	 
+	 <!-- CÓDIGO DO AMBIENTE DE DESENVOLVIMENTO -->
 	 
 	 	 	   <Resource name="jdbc/Edutdb"
         				auth="Container"
@@ -30,6 +30,20 @@
         				username="postgres"
         				password="admin"
         /> 
+        
+        <!-- CÓDIGO DO AMBIENTE DE PRODUÇÃO -->
+         
+	<!--  	 	   <Resource name="jdbc/Edutdb"
+        				auth="Container"
+        				type="javax.sql.DataSource"
+        				maxActive="100"
+        				maxIdle="50"
+        				maxWait="10000"
+        				driverClassName="org.postgresql.Driver"
+        				url="jdbc:postgresql://localhost:5432/postgres"
+        				username="postgres"
+        				password="p@ssword10"
+        />  --> 
 	 		
 			<Realm className="org.apache.catalina.realm.JAASRealm"  
    				 appName="AppLoginModuleJAAS"   

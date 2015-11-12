@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -100,8 +102,11 @@ public class ValidarRegraForm extends Action {
 		
 		for (NotaValidadaItem notaItem: validacao.getNfeGerada().getNotaValidada().getNotasValidadaItem()) {
 				
-				for(NotaValidadaAliquota notaAliquota:notaItem.getNotasValidadasAliquotas()) {
-					
+				
+			
+			for(NotaValidadaAliquota notaAliquota:notaItem.getNotasValidadasAliquotas()) {
+							
+						 if(notaAliquota != null) {
 								switch (notaAliquota.getOrigem()) {
 											
 											case 1:
@@ -116,14 +121,15 @@ public class ValidarRegraForm extends Action {
 												break;
 										
 										}
-					
+						 		}
+							}
 				}
 			
 						
-		}
+	
 		
 		//para o caso da finalidade da nota fiscal ser industrialização
-		if (validacao != null && validacao.getFinalidadeNfe().getCdFinalidadeNfe() == 2) {
+		if (validacao != null && validacao.getFinalidadeNfe().getCdFinalidadeNfe() == 1) {
 			
 			for (NotaValidadaItem notaItem: validacao.getNfeGerada().getNotaValidada().getNotasValidadaItem()) {
 				
@@ -133,13 +139,37 @@ public class ValidarRegraForm extends Action {
 						if (notaAliquota.getCst().getNmCST().equals("60") && notaAliquota.getTipoImpostoAliquota().getCdTipoImposto() == 1) {
 								
 							 List<ImpostoNcm> listaImpostoNcmCadastrado = ImpostoNcmDao.getInstance().buscarImpostoNcm(notaItem.getNcm().getNmNCM(),
-							  			2, notaItem.getNcm().getEmpresa().getCdcnpj());
+							  			1, notaItem.getNcm().getEmpresa().getCdcnpj());
 							
-								//VALOR DO ICMS CADASTRADO NO SISTEMA
-							 if (listaImpostoNcmCadastrado.get(0) != null) {
-								 notaAliquota.setPercentualAliquota(NumeroFormato.getNumero2digitos((float)listaImpostoNcmCadastrado.get(0).getNuPercentualImposto()) );
-								 notaAliquota.setValorBCSTRetidoAnteriormente(NumeroFormato.getNumero2digitos(notaAliquota.getValorBCImposto() * notaAliquota.getPercentualAliquota()));
+							 if (listaImpostoNcmCadastrado == null) {
+									request.setAttribute("erro", "Imposto não foi cadastrado para o ncm: " + notaItem.getNcm().getNmNCM() + ",finalidade " 
+							 				+ validacao.getFinalidadeNfe().getNmFinalidade());
+									return mapping.findForward("erro");
 							 }
+							 
+						//ATRIBUI O CST CADASTRADO NO SISTEMA A NOTA	 
+						notaAliquota.getCst().setNmCST(listaImpostoNcmCadastrado.get(0).getNcm().getCsts().get(0).getNmCST());
+						
+						 switch (notaAliquota.getCst().getNmCST()) {
+							
+						 	case "00":
+							    notaAliquota.setValorBCImposto((validacao.getNfeInicial().getNotaValidada().getValorProdutoTotal() + validacao.getNfeInicial().getNotaValidada().getValorFrete()));	
+								notaAliquota.setPercentualAliquota((float) listaImpostoNcmCadastrado.get(0).getNuPercentualImposto());
+								notaAliquota.setValorAliquota(NumeroFormato.getNumero2digitos((float)(notaAliquota.getPercentualAliquota()/100) * notaAliquota.getValorBCImposto()));
+								break;
+							
+							case "10":
+								
+								break;
+							
+							case "60":
+								 notaAliquota.setValorBCSTRetidoAnteriormente(NumeroFormato.getNumero2digitos((validacao.getNfeInicial().getNotaValidada().getValorProdutoTotal() + validacao.getNfeInicial().getNotaValidada().getValorFrete())));
+								 notaAliquota.setValorImpostoSTRetidoAnteriormente(NumeroFormato.getNumero2digitos((float)listaImpostoNcmCadastrado.get(0).getNuPercentualImposto() * (notaAliquota.getValorBCSTRetidoAnteriormente()/100)));
+								break;
+							default:
+								break;
+							}
+							
 								
 						}	
 					
@@ -154,11 +184,21 @@ public class ValidarRegraForm extends Action {
 		for (NotaValidadaItem notaItem: validacao.getNfeGerada().getNotaValidada().getNotasValidadaItem()) {
 			
 			for(NotaValidadaAliquota notaAliquota:notaItem.getNotasValidadasAliquotas()) {
+				
+				 List<ImpostoNcm> listaImpostoNcmCadastrado = ImpostoNcmDao.getInstance().buscarImpostoNcm(notaItem.getNcm().getNmNCM(),
+				  			validacao.getFinalidadeNfe().getCdFinalidadeNfe(), notaItem.getNcm().getEmpresa().getCdcnpj());
+				
+				
+				// TRATAMENTO PARA A FINALIDADE DA NOTA FOR REVENDA(INDUSTRIALIZAÇÃO)
+				if (validacao.getFinalidadeNfe().getCdFinalidadeNfe() == 3 && listaImpostoNcmCadastrado.get(0).getNcm().getCsts().get(0).getNmCST().equals("00")) {
+			 		request.setAttribute("erro", "CST Cadastrado para o NCM " + notaItem.getNcm().getNmNCM() + ",finalidade " 
+			 				+ validacao.getFinalidadeNfe().getNmFinalidade() + ", é diferente da nota, a nota rejeitada.");
+					return mapping.findForward("erro");
+		
+				}
 					
 				if (!notaAliquota.getCst().getNmCST().equals("60")){
 						
-					 List<ImpostoNcm> listaImpostoNcmCadastrado = ImpostoNcmDao.getInstance().buscarImpostoNcm(notaItem.getNcm().getNmNCM(),
-					  			validacao.getFinalidadeNfe().getCdFinalidadeNfe(), notaItem.getNcm().getEmpresa().getCdcnpj());
 					
 					 //o CST IRÁ MUDAR PARA TODOS OS IMPOSTOS?
 					 if (listaImpostoNcmCadastrado.get(0) != null) {
@@ -176,6 +216,8 @@ public class ValidarRegraForm extends Action {
 					 				+ validacao.getFinalidadeNfe().getNmFinalidade());
 							return mapping.findForward("erro");
 					 }
+					 
+					
 					
 				}
 				
@@ -190,8 +232,10 @@ public class ValidarRegraForm extends Action {
 		//PEGA o tipo de empresa da sessão
 		Empresa empSessao = (Empresa) request.getSession().getAttribute("empresa");
 		
+		
+		
 		//SE A EMPRESA FOR SIMPLES NACIONAL ALTERA BC e aliquota dependendo do tipo de imposto
-		//if (empSessao.getRegimeTibutario().getCodTipoImposto() == 3) {
+		if (empSessao.getRegimeTibutario().getCodTipoImposto() == 3) {
 				
 				//este algorítimo sempre zera as alíquotas e o CST/ CSOSN
 		
@@ -244,7 +288,25 @@ public class ValidarRegraForm extends Action {
 				}
 	
 
+	}	
+		//EMPRESA NÃO FOR LUCRO REAL
+		if (empSessao.getRegimeTibutario().getCodTipoImposto() != 1) {
+			for (NotaValidadaItem notaItem: validacao.getNfeGerada().getNotaValidada().getNotasValidadaItem()) {
 			
+				for (NotaValidadaAliquota aliquotaNota:notaItem.getNotasValidadasAliquotas()) {
+					if (aliquotaNota.getTipoImpostoAliquota().getCdTipoImposto() == 2 || aliquotaNota.getTipoImpostoAliquota().getCdTipoImposto() == 3) {
+						CST cst = new CST();
+						cst.setNmCST("70");
+						aliquotaNota.setCst(cst);
+						aliquotaNota.setValorBCImposto(0);
+						aliquotaNota.setPercentualAliquota(0);
+						aliquotaNota.setValorAliquota(0);
+						}
+				}
+					
+				}
+		}
+	
 			
 
 		  
@@ -281,9 +343,10 @@ Fimse*/
 	  	}
        
 	  	//request.getSession(true).setAttribute("streamDownload", new String(byteArrayOutput.toByteArray()));
+	  	request.getSession(true).setAttribute("nomeNfe", validacao.getNfeGerada().getNmNfe());
         request.getSession(true).setAttribute("streamDownload", outPutDownload);
         
-        
+        outPutDownload.close();
         /*ServletOutputStream servletOutput = response.getOutputStream();
         
         byteArrayOutput.writeTo(servletOutput);
@@ -313,9 +376,16 @@ Fimse*/
 			 List<ImpostoNcm> listaImpostoNcmCadastrado = ImpostoNcmDao.getInstance().buscarImpostoNcm(notaItemNota.getNcm().getNmNCM(),
 					 validacao.getFinalidadeNfe().getCdFinalidadeNfe(), notaItemNota.getNcm().getEmpresa().getCdcnpj());
 			 
-			 
+			 float valorIPINota = 0;
 		 	 //IPI
-		 	 float valorIPINota = notaItemNota.getNotasValidadasAliquotas().get(3).getValorAliquota();
+			 if (notaItemNota.getNotasValidadasAliquotas().size() > 3) {
+				 
+			
+			 if (notaItemNota.getNotasValidadasAliquotas().get(3) != null)
+				 valorIPINota = notaItemNota.getNotasValidadasAliquotas().get(3).getValorAliquota();
+			 
+			 }
+			 
 		 	 float valorIPICadastrado  = 0;
 		 	 
 		 	 if (valorIPINota != 0) {
@@ -358,7 +428,7 @@ Fimse*/
 				try {
 					impostoNcmEstado = ImpostoNcmEstadoDao
 							.getInstance().getMVAjustadoImposto(
-									notaItemNota.getNcm().getNmNCM(), 35);
+									notaItemNota.getNcm().getNmNCM(), 35, validacao.getFinalidadeNfe().getCdFinalidadeNfe());
 				} catch (javax.persistence.NoResultException result) {
 					LogUtil.getLog()
 							.error("Não existe nenhum imposto de MVA/ MVAjustado cadastrado para o NCM " + notaItemNota.getNcm().getNmNCM() +
@@ -393,7 +463,7 @@ Fimse*/
 		 			  		float valorAliquotaICMSSTNota = notaItemNota.getNotasValidadasAliquotas().get(0).getValorAliquotaST(); 
 		 			  		
 		 			  		
-		 			  		if (NumeroFormato.getNumero2digitos((valorAliquotaICMSSTNota - icmsST)) < -0.01) {
+		 			  		if (NumeroFormato.getNumero2digitos((icmsST - valorAliquotaICMSSTNota)) < -0.01) {
 		 			  		 ValidacaoErro validacaoErro = new ValidacaoErro();
 				 			 validacaoErro.setTxtAuxiliar("NCM do item:" + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + valorAliquotaICMSSTNota +
 		 				 			  " valor cadastrado: " + icmsST + "<br/>" );
@@ -426,7 +496,7 @@ Fimse*/
 	 			  			//float icmsSTRed = valorICMSSTReduzida - (notaItemNota.getNotasValidadasAliquotas().get(0).getValorBCImposto() * (notaItemNota.getNotasValidadasAliquotas().get(0).getPercentualAliquota()/100));
 		 			  		
 		 			  		//para cst 70 possui percentual de redução
-		 			  		if (NumeroFormato.getNumero2digitos((valorIcmsNota - valorICMSSTReduzida)) < -0.01) {
+		 			  		if (NumeroFormato.getNumero2digitos((valorICMSSTReduzida - valorIcmsNota)) < -0.01) {
 		 			  		 ValidacaoErro validacaoErro = new ValidacaoErro();
 				 			 validacaoErro.setTxtAuxiliar("NCM do item:" + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + icmsSTCadastrado +
 	 				 			  " valor cadastrado: " + valorIcmsNota + "<br/>" );
@@ -449,7 +519,7 @@ Fimse*/
 		 			 float valorBCIcms =  (float) (notaItemNota.getValorBrutoProduto()) - (percentualReducao /100 * notaItemNota.getValorBrutoProduto());
 			 		  float valorICMSCadastrado =  NumeroFormato.getNumero2digitos((float) (valorBCIcms * (listaImpostoNcmCadastrado.get(0).getNuPercentualImposto() /100)));
 			 		 
-			 		  if (NumeroFormato.getNumero2digitos((valorIcmsNota - valorICMSCadastrado)) < -0.01) {
+			 		  if (NumeroFormato.getNumero2digitos((valorICMSCadastrado - valorIcmsNota)) < -0.01) {
 				 			 ValidacaoErro validacaoErro = new ValidacaoErro();
 				 			 validacaoErro.setTxtAuxiliar("NCM do item: " +  notaItemNota.getNcm().getNmNCM()  + "  valor ICMS da nota " + valorIcmsNota + " valor da alíquota ICMS cadastrada: " + 
 		 		  				valorICMSCadastrado + "<br/>" );
@@ -482,7 +552,7 @@ Fimse*/
 			 		  
 			 		  	float valorPISCadastrado =  NumeroFormato.getNumero2digitos((float) (notaItemNota.getNotasValidadasAliquotas().get(1).getValorBCImposto() * (listaImpostoNcmCadastrado.get(1).getNuPercentualImposto()/100)));
 			 		  	
-			 		  if (NumeroFormato.getNumero2digitos((valorPISNota - valorPISCadastrado)) < -0.01) {
+			 		  if (NumeroFormato.getNumero2digitos((valorPISCadastrado - valorPISNota)) < -0.01) {
 			 			 ValidacaoErro validacaoErro = new ValidacaoErro();
 			 			 validacaoErro.setTxtAuxiliar("<b>Nota recusada.Valor do PIS inconsistente.</b><br/> NCM do item: " + notaItemNota.getNcm().getNmNCM() + " valor da alíquota nota: " + valorPISNota + " valor aliquota cadastrada: " +
 			 					 valorPISCadastrado + "<br/>");

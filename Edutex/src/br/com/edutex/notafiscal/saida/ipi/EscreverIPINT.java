@@ -14,15 +14,18 @@ public class EscreverIPINT implements EscreverTributacao {
 	public Element escreverTributacaoNota(Element element,
 			NotaValidadaAliquota notaValidadaAliquota) {
 		
+		Element elementCEnq = new Element("cEnq", NotaFiscalUtil.getNameSpace());
+		elementCEnq.setText(String.valueOf(notaValidadaAliquota.getCodigoEnquadramento()));
 		Element elementoIPINT = new Element("IPINT", NotaFiscalUtil.getNameSpace());
 		
 		Element cst = new Element("CST", NotaFiscalUtil.getNameSpace());
 		cst.setText(notaValidadaAliquota.getCst().getNmCST());
 		
 		
-		elementoIPINT.setText(String.valueOf(cst));
+		elementoIPINT.addContent(cst);
 		
 		element.removeContent();
+		element.addContent(elementCEnq);
 		element.addContent(elementoIPINT);
 		
 		return element;

@@ -27,6 +27,7 @@ import br.com.edutex.notafiscal.entrada.cofins.LerCOFINSST;
 import br.com.edutex.notafiscal.entrada.icms.LerICMSTotal;
 import br.com.edutex.notafiscal.entrada.pis.LerPISST;
 import br.com.edutex.notafiscal.saida.cofins.EscreverCOFINSST;
+import br.com.edutex.notafiscal.saida.icms.EscreverICMSTotal;
 import br.com.edutex.notafiscal.saida.pis.EscreverPISST;
 import br.com.edutex.notafiscal.util.NotaFiscalUtil;
   
@@ -49,6 +50,8 @@ public class NotaFiscal {
 	public OutputStream escreverXML(NFE nfe) throws NotaInvalidaException, NumberFormatException, IOException {
 
 		SAXBuilder builder = new SAXBuilder();
+		builder.setIgnoringBoundaryWhitespace(true);
+		builder.setIgnoringElementContentWhitespace(true);
 		File arquivo = new File(nfe.getNmFilePath());
 		  OutputStream outPutStream = null;
 		
@@ -59,6 +62,8 @@ public class NotaFiscal {
 				NotaFiscalUtil.setNamesSpace(root.getNamespace().getURI());
 				Element node = root.getChild("NFe",root.getNamespace());
 				NotaValidada nota = nfe.getNotaValidada();
+				List<NotaValidadaAliquota> notasAliquotas = null;
+				
 				if (node == null) {
 					throw new NullPointerException("Elemento nfe da nota fiscal eletrônica inexistente");
 				}
@@ -177,7 +182,7 @@ public class NotaFiscal {
 
 						}
 						
-						List<NotaValidadaAliquota> notasAliquotas = notaItem.getNotasValidadasAliquotas();
+						notasAliquotas = notaItem.getNotasValidadasAliquotas();
 						
 						Collections.sort(notasAliquotas);
 						
@@ -238,7 +243,7 @@ public class NotaFiscal {
 							case 5:
 								notaFiscalAliquota.setTipoEscrita(new EscreverCOFINSST());
 								nodeCOFINSST = notaFiscalAliquota.escreveTributacao.escreverTributacaoNota(nodeCOFINSST, notaValidadaAliquota);
-								
+								break;
 							case 6:
 								notaFiscalAliquota.setTipoEscrita(new EscreverPISST());
 								nodePIS = notaFiscalAliquota.escreveTributacao.escreverTributacaoNota(nodePISST, notaValidadaAliquota);
@@ -248,28 +253,56 @@ public class NotaFiscal {
 							}
 						}
 						
+					
+						
 
-						XMLOutputter xmlOutput = new XMLOutputter();
-		
-					   xmlOutput.setFormat(Format.getPrettyFormat());
-									
-					   
-					  String nomeArquivo = NotaFiscalUtil.getNomeArquivo(nfe);
-					  nfe.setNmFilePath(nomeArquivo);
-					  nfe.setDtUpload(Calendar.getInstance());
-					  nfe.setNmNfe(NotaFiscalUtil.getNomeLogico(nfe));
-					  xmlOutput.output(document, new FileWriter(nomeArquivo));
-					  outPutStream = new ByteArrayOutputStream();
-					  xmlOutput.output(document, outPutStream);
-					  outPutStream.close();
-					  
-					  return outPutStream;
 						
 					}	
 					
+					
+					
 				 }	
 				 
-			}
+				 
+				 if (ele.getName().equals("total")) {
+					
+					 
+					 Element icmsTotal = ele.getChild("ICMSTot",
+								root.getNamespace());
+					 
+					 
+					 if (icmsTotal != null) {
+						 
+						NotaFiscalAliquota notaFiscalAliquota = new NotaFiscalAliquota();
+						notaFiscalAliquota.setEscreverTributacaoTotal(new EscreverICMSTotal());
+						notaFiscalAliquota.getEscreverTributacaoTotal().escreverTributacaoTotalNota(nfe.getNotaValidada().getNotasValidadaItem(),ele);
+						 
+					 }
+						 
+					
+				 }
+				 
+			}	 
+				 
+					XMLOutputter xmlOutput = new XMLOutputter();
+	
+				   xmlOutput.setFormat(Format.getPrettyFormat());
+								
+				    
+				  String nomeArquivo = NotaFiscalUtil.getNomeArquivo(nfe);
+				  nfe.setNmFilePath(nomeArquivo);
+				  nfe.setDtUpload(Calendar.getInstance());
+				  nfe.setNmNfe(NotaFiscalUtil.getNomeLogico(nfe));
+				  xmlOutput.output(document, new FileWriter(nomeArquivo));
+				  outPutStream = new ByteArrayOutputStream();
+				  
+				  xmlOutput.output(document, outPutStream);
+				  
+				  return outPutStream;
+					
+				 
+				 
+			
 
 				} catch (JDOMException jdomex) {
 				throw new NotaInvalidaException("Nota inválida" + jdomex.getMessage());
@@ -278,7 +311,6 @@ public class NotaFiscal {
 		} else {
 			throw new IllegalArgumentException("Arquivo da nota fiscal não encontrado");
 		}
-		return null;
 	
 
 	}
@@ -521,8 +553,7 @@ public class NotaFiscal {
 				if (nodeIPI != null) {
 						  notasAliquotas.add(notaFiscalAliquota.escolherLeituraTributacaoIPI(nodeIPI));
 				}
-		
-						
+				
 						notaItem.setNotasValidadasAliquotas(notasAliquotas);
 						notasValidadaItem.add(notaItem);
 						
@@ -567,5 +598,6 @@ public class NotaFiscal {
 
 	}
 	
+
 	
 }

@@ -13,7 +13,9 @@ public class EscreverCOFINSAliq implements EscreverTributacao {
 	 */
 	public Element escreverTributacaoNota(Element element,
 			NotaValidadaAliquota notaValidadaAliquota) {
-	
+		
+		
+		
 		Element elementoCOFINS = new Element("COFINSAliq",NotaFiscalUtil.getNameSpace());
 		
 		Element cst = new Element("CST",NotaFiscalUtil.getNameSpace());
@@ -27,7 +29,8 @@ public class EscreverCOFINSAliq implements EscreverTributacao {
 		
 		Element vCOFINS = new Element("vCOFINS",NotaFiscalUtil.getNameSpace());
 		vCOFINS.setText(String.valueOf(notaValidadaAliquota.getValorAliquota()));
-
+		
+		element.removeContent();
 		elementoCOFINS.addContent(cst);
 		elementoCOFINS.addContent(vBC);
 		elementoCOFINS.addContent(pCOFINS);

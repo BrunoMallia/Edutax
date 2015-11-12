@@ -87,6 +87,8 @@ public class NotaValidadaAliquota implements Serializable, Comparable<NotaValida
 	
 	private float valorAliquotaProduto;
 	
+	private int codigoEnquadramento;
+	
 	/** pega o valor do objeto TipoImposto
 	 * exemplos de valor: ICMS, PIS ,COFINS, IPI
 	 * @return TipoImposto
@@ -618,6 +620,14 @@ public class NotaValidadaAliquota implements Serializable, Comparable<NotaValida
 	 */
 	public void setValorUnidadeTributavel(float valorUnidadeTributavel) {
 		this.valorUnidadeTributavel = valorUnidadeTributavel;
+	}
+
+	public int getCodigoEnquadramento() {
+		return codigoEnquadramento;
+	}
+
+	public void setCodigoEnquadramento(int codigoEnquadramento) {
+		this.codigoEnquadramento = codigoEnquadramento;
 	}
 
 	

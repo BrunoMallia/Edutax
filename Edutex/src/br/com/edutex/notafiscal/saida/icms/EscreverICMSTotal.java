@@ -24,7 +24,7 @@ public class EscreverICMSTotal implements EscreverTributacaoTotal {
 	public Element escreverTributacaoTotalNota(
 			List<NotaValidadaItem> listaNotaValidadaItem, Element nodeTotal) {
 		
-		float valorICMS = 0,valorPIS = 0,valorCOFINS = 0,valorIPI = 0,valorICMSDeson = 0, valorST = 0, valorProd = 0;
+		float valorICMS = 0,valorPIS = 0,valorCOFINS = 0,valorIPI = 0,valorICMSDeson = 0, valorST = 0, valorProd = 0, valorBCST = 0,valorBC = 0;;
 		
 		
 		for (NotaValidadaItem notaValidadaItem: listaNotaValidadaItem) {
@@ -38,7 +38,16 @@ public class EscreverICMSTotal implements EscreverTributacaoTotal {
 				switch (notaValidadaAliquota.getTipoImpostoAliquota().getCdTipoImposto()){
 					case 01:
 						valorICMS += notaValidadaAliquota.getValorAliquota();
+						valorICMS += notaValidadaAliquota.getValorImpostoSTRetidoAnteriormente();
+						
 						valorICMSDeson += notaValidadaAliquota.getValorAliquotaDesoneracao();
+						valorBC += notaValidadaAliquota.getValorBCImposto();
+						
+						if (valorBC == 0) {
+						valorBC += notaValidadaAliquota.getValorBCST();
+						valorBC += notaValidadaAliquota.getValorBCSTRetidoAnteriormente();
+						}
+						
 						break;
 						
 					case 02:
@@ -74,7 +83,7 @@ public class EscreverICMSTotal implements EscreverTributacaoTotal {
 		Element icmsTotal = new Element("ICMSTot", NotaFiscalUtil.getNameSpace());
 		
 		Element vBC = new Element("vBC", NotaFiscalUtil.getNameSpace());
-		vBC.setText(String.valueOf(notaValidada.getValorICMSTotal()));
+		vBC.setText(String.valueOf(valorBC));
 		
 		Element vICMS = new Element("vICMS", NotaFiscalUtil.getNameSpace());
 		vICMS.setText(String.valueOf(valorICMS));
@@ -83,11 +92,11 @@ public class EscreverICMSTotal implements EscreverTributacaoTotal {
 		vICMSDeson.setText(String.valueOf(valorICMSDeson));
 		
 		Element vBCST = new Element("vBCST", NotaFiscalUtil.getNameSpace());
-		vBCST.setText(String.valueOf(notaValidada.getValorBCTotal()));
+		vBCST.setText(String.valueOf(valorBC));
 		
 		Element vST = new Element("vST", NotaFiscalUtil.getNameSpace());
 		//como eu pego o valor de Substituição Tributári Total
-		vST.setText(String.valueOf(notaValidada.getValorSTTotal()));
+		vST.setText(String.valueOf(valorST));
 		
 		Element vProd = new Element("vProd",NotaFiscalUtil.getNameSpace());
 		vProd.setText(String.valueOf(valorProd));
