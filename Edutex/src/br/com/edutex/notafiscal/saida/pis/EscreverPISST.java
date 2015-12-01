@@ -1,5 +1,7 @@
 package br.com.edutex.notafiscal.saida.pis;
 
+import java.util.Locale;
+
 import org.jdom2.Element;
 
 import br.com.edutex.logic.NotaValidadaAliquota;
@@ -14,13 +16,13 @@ public class EscreverPISST implements EscreverTributacao {
 	 Element elementoPIS = new Element("PISST",NotaFiscalUtil.getNameSpace());
 	 
 	 Element vBC = new Element("vBC",NotaFiscalUtil.getNameSpace());
-	 vBC.setText(String.valueOf(notaValidadaAliquota.getValorBCImposto()));
+	 vBC.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorBCImposto()));
 	 
 	 Element pPIS = new Element("pPIS",NotaFiscalUtil.getNameSpace());
-	 pPIS.setText(String.valueOf(String.valueOf(notaValidadaAliquota.getPercentualAliquota())));
+	 pPIS.setText(String.format(Locale.US,"%.2f",String.valueOf(notaValidadaAliquota.getPercentualAliquota())));
 	 
 	 Element vPIS = new Element("vpIS",NotaFiscalUtil.getNameSpace());
-	 vPIS.setText(String.valueOf(notaValidadaAliquota.getValorAliquota()));
+	 vPIS.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorAliquota()));
 	 
 	 element.removeContent();
 

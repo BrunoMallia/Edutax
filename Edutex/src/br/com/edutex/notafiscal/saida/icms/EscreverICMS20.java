@@ -1,5 +1,7 @@
 package br.com.edutex.notafiscal.saida.icms;
 
+import java.util.Locale;
+
 import org.jdom2.Element;
 
 import br.com.edutex.logic.NotaValidadaAliquota;
@@ -28,19 +30,19 @@ public class EscreverICMS20 implements EscreverTributacao {
 	    modBC.setText( String.valueOf(notaValidadaAliquota.getModBCImposto()));
 	    
 	    Element pRedBC = new Element("pRedBC",NotaFiscalUtil.getNameSpace());
-	    pRedBC.setText(String.valueOf(notaValidadaAliquota.getPercentualReducaoBC()));
+	    pRedBC.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getPercentualReducaoBC()));
 	    
 	    Element valorBC = new Element("vBC",NotaFiscalUtil.getNameSpace());
-	    valorBC.setText(String.valueOf(notaValidadaAliquota.getValorBCImposto()));
+	    valorBC.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorBCImposto()));
 		
 	    Element percentualImposto = new Element("pICMS",NotaFiscalUtil.getNameSpace());
-	    percentualImposto.setText(String.valueOf(notaValidadaAliquota.getPercentualAliquota()));
+	    percentualImposto.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getPercentualAliquota()));
 	    
 	    Element valorImposto = new Element("vICMS",NotaFiscalUtil.getNameSpace());
-	    valorImposto.setText(String.valueOf(notaValidadaAliquota.getValorAliquota()));
+	    valorImposto.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorAliquota()));
 	    
 	    Element vICMSDeson = new Element("vICMSDeson",NotaFiscalUtil.getNameSpace());
-	    vICMSDeson.setText(String.valueOf(notaValidadaAliquota.getValorAliquotaDesoneracao()));
+	    vICMSDeson.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorAliquotaDesoneracao()));
 	   
 	    Element motDesICMS = new Element("motDescICMS",NotaFiscalUtil.getNameSpace());
 	    motDesICMS.setText(String.valueOf(notaValidadaAliquota.getMotivoDesoneracaoImposto()));

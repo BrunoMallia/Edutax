@@ -9,13 +9,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
+import org.jdom2.output.LineSeparator;
 import org.jdom2.output.XMLOutputter;
+import org.jdom2.output.Format.TextMode;
 
 import br.com.edutex.exceptions.NotaInvalidaException;
 import br.com.edutex.logic.NCM;
@@ -51,7 +54,6 @@ public class NotaFiscal {
 
 		SAXBuilder builder = new SAXBuilder();
 		builder.setIgnoringBoundaryWhitespace(true);
-		builder.setIgnoringElementContentWhitespace(true);
 		File arquivo = new File(nfe.getNmFilePath());
 		  OutputStream outPutStream = null;
 		
@@ -150,19 +152,22 @@ public class NotaFiscal {
 				nodeXNome.setText(String.valueOf(nota.getNmNFornecedor()));
 				nodeCRT.setText(String.valueOf(nota.getCRT()));
 				
+				int count  = 0;
 				for (Element ele : node.getChildren()) {
 				  NotaValidadaItem notaItem = null;
+				
 					
 				 if (ele.getName().equals("det")) {
 					 
 						Element prod = ele.getChild("prod",
 								root.getNamespace());
-
+						
+				
+						 notaItem = nota.getNotasValidadaItem().get(count++);
+						
 						// ELEMENTO PROD para pegar NCM
 						for (Element element : prod.getChildren()) {
-							int count  = 0;
-							 notaItem = nota.getNotasValidadaItem().get(count);
-				
+							
 								
 							switch (element.getName()) {
 								
@@ -175,7 +180,7 @@ public class NotaFiscal {
 									break;
 									
 								case "vProd":	
-									element.setText(String.valueOf(notaItem.getValorBrutoProduto()));
+									element.setText(String.format(Locale.US,"%.2f",notaItem.getValorBrutoProduto()));
 									break;
 								
 							}
@@ -275,7 +280,7 @@ public class NotaFiscal {
 						 
 						NotaFiscalAliquota notaFiscalAliquota = new NotaFiscalAliquota();
 						notaFiscalAliquota.setEscreverTributacaoTotal(new EscreverICMSTotal());
-						notaFiscalAliquota.getEscreverTributacaoTotal().escreverTributacaoTotalNota(nfe.getNotaValidada().getNotasValidadaItem(),ele);
+						notaFiscalAliquota.getEscreverTributacaoTotal().escreverTributacaoTotalNota(nfe.getNotaValidada(),ele);
 						 
 					 }
 						 
@@ -284,19 +289,24 @@ public class NotaFiscal {
 				 
 			}	 
 				 
+					
 					XMLOutputter xmlOutput = new XMLOutputter();
-	
-				   xmlOutput.setFormat(Format.getPrettyFormat());
-								
+					xmlOutput.setFormat(xmlOutput.getFormat().setLineSeparator(LineSeparator.NONE).setTextMode(TextMode.TRIM).setEncoding("UTF-8"));
+					
+			
 				    
 				  String nomeArquivo = NotaFiscalUtil.getNomeArquivo(nfe);
 				  nfe.setNmFilePath(nomeArquivo);
 				  nfe.setDtUpload(Calendar.getInstance());
 				  nfe.setNmNfe(NotaFiscalUtil.getNomeLogico(nfe));
+				  
 				  xmlOutput.output(document, new FileWriter(nomeArquivo));
 				  outPutStream = new ByteArrayOutputStream();
 				  
+				  
 				  xmlOutput.output(document, outPutStream);
+				  
+				  
 				  
 				  return outPutStream;
 					
@@ -561,7 +571,7 @@ public class NotaFiscal {
 					}
 					
 					nota.setNotasValidadaItem(notasValidadaItem);
-					nfe.setNotaValidada(nota);
+					
 					
 					
 				 }	
@@ -583,6 +593,8 @@ public class NotaFiscal {
 						}
 
 					}
+					
+					nfe.setNotaValidada(nota);
 
 				}
 

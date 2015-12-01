@@ -1,5 +1,7 @@
 package br.com.edutex.notafiscal.saida.cofins;
 
+import java.util.Locale;
+
 import org.jdom2.Element;
 
 import br.com.edutex.logic.NotaValidadaAliquota;
@@ -20,19 +22,19 @@ public class EscreverCOFINSOutr implements EscreverTributacao {
 		cst.setText(notaValidadaAliquota.getCst().getNmCST());
 		
 		Element vBC = new Element("vBC",NotaFiscalUtil.getNameSpace());
-		vBC.setText(String.valueOf(notaValidadaAliquota.getValorBCImposto()));
+		vBC.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorBCImposto()));
 		
 		Element pCOFINS = new Element("pCOFINS",NotaFiscalUtil.getNameSpace());
-		pCOFINS.setText(String.valueOf(notaValidadaAliquota.getPercentualAliquota()));
+		pCOFINS.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getPercentualAliquota()));
 		
 		Element qBCProd = new Element("qBCProd",NotaFiscalUtil.getNameSpace());
 		qBCProd.setText(String.valueOf(notaValidadaAliquota.getQuantidadeBCProduto()));
 	
 		Element vAliqProd = new Element("vAliqProd",NotaFiscalUtil.getNameSpace());
-		vAliqProd.setText(String.valueOf(notaValidadaAliquota.getValorAliquotaProduto()));
+		vAliqProd.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorAliquotaProduto()));
 		
 		Element vCOFINS = new Element("vCOFINS",NotaFiscalUtil.getNameSpace());
-		vCOFINS.setText(String.valueOf(notaValidadaAliquota.getValorAliquota()));
+		vCOFINS.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorAliquota()));
 		
 		element.removeContent();
 		elementoCOFINS.addContent(cst);

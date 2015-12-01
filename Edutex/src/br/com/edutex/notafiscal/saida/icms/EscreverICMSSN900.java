@@ -31,40 +31,40 @@ public class EscreverICMSSN900 implements EscreverTributacao {
 	modBC.setText(String.valueOf(notaValidadaAliquota.getModBCImposto()));
 	
 	Element vBC = new Element("vBC",NotaFiscalUtil.getNameSpace());
-	vBC.setText(String.valueOf(notaValidadaAliquota.getValorBCImposto()));
+	vBC.setText(String.format("%.2f",notaValidadaAliquota.getValorBCImposto()));
 	
 	Element pRedBC = new Element("pRedBC",NotaFiscalUtil.getNameSpace());
-	pRedBC.setText(String.valueOf(notaValidadaAliquota.getPercentualReducaoBC()));
+	pRedBC.setText(String.format("%.2f",notaValidadaAliquota.getPercentualReducaoBC()));
 	
 	Element pICMS = new Element("pICMS",NotaFiscalUtil.getNameSpace());
-	pICMS.setText(String.valueOf(notaValidadaAliquota.getPercentualAliquota()));
+	pICMS.setText(String.format("%.2f",notaValidadaAliquota.getPercentualAliquota()));
 	
 	Element vICMS = new Element("vICMS",NotaFiscalUtil.getNameSpace());
-	vICMS.setText(String.valueOf(notaValidadaAliquota.getValorAliquota()));
+	vICMS.setText(String.format("%.2f",notaValidadaAliquota.getValorAliquota()));
 	
 	Element modBCST = new Element("modBCST",NotaFiscalUtil.getNameSpace());
 	modBCST.setText(String.valueOf(notaValidadaAliquota.getModBCSTImposto()));
 	
 	Element pMVAST = new Element("pMVAST",NotaFiscalUtil.getNameSpace());
-	pMVAST.setText(String.valueOf(notaValidadaAliquota.getPercentualMargemValorAdicionadoST()));
+	pMVAST.setText(String.format("%.2f",notaValidadaAliquota.getPercentualMargemValorAdicionadoST()));
 	
 	Element pRedBCST = new Element("pRedBCST",NotaFiscalUtil.getNameSpace());
-	pRedBCST.setText(String.valueOf(notaValidadaAliquota.getPercentualReducaoBCST()));
+	pRedBCST.setText(String.format("%.2f",notaValidadaAliquota.getPercentualReducaoBCST()));
 
 	Element vBCST = new Element("vBCST",NotaFiscalUtil.getNameSpace());
-	vBCST.setText(String.valueOf(notaValidadaAliquota.getValorBCST()));
+	vBCST.setText(String.format("%.2f",notaValidadaAliquota.getValorBCST()));
 	
 	Element pICMSST = new Element("pICMSST",NotaFiscalUtil.getNameSpace());
-	pICMSST.setText(String.valueOf(notaValidadaAliquota.getPercentualAliquotaST()));
+	pICMSST.setText(String.format("%.2f",notaValidadaAliquota.getPercentualAliquotaST()));
 	
 	Element vICMSST = new Element("vICMSST",NotaFiscalUtil.getNameSpace());
-	vICMSST.setText(String.valueOf(notaValidadaAliquota.getValorAliquotaST()));
+	vICMSST.setText(String.format("%.2f",notaValidadaAliquota.getValorAliquotaST()));
 	
 	Element pCredSN = new Element("pCredSN",NotaFiscalUtil.getNameSpace());
-	pCredSN.setText(String.valueOf(notaValidadaAliquota.getPercentualCreditoSN()));
+	pCredSN.setText(String.format("%.2f",notaValidadaAliquota.getPercentualCreditoSN()));
 	
 	Element vCredICMSSN = new Element("vCredICMSSN",NotaFiscalUtil.getNameSpace());
-	vCredICMSSN.setText(String.valueOf(notaValidadaAliquota.getValorCreditoSN()));
+	vCredICMSSN.setText(String.format("%.2f",notaValidadaAliquota.getValorCreditoSN()));
 	
 	
 	elementICMS.removeContent();

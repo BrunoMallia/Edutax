@@ -1,5 +1,7 @@
 package br.com.edutex.notafiscal.saida.icms;
 
+import java.util.Locale;
+
 import org.jdom2.Element;
 
 import br.com.edutex.logic.NotaValidadaAliquota;
@@ -29,16 +31,16 @@ public class EscreverICMS51 implements EscreverTributacao {
 		modBC.setText(String.valueOf(notaValidadaAliquota.getModBCImposto()));
 		
 		Element pRedBC = new Element("pRedBC",NotaFiscalUtil.getNameSpace());
-		pRedBC.setText(String.valueOf(notaValidadaAliquota.getPercentualReducaoBC()));
+		pRedBC.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getPercentualReducaoBC()));
 		
 		Element vBC = new Element("vBC",NotaFiscalUtil.getNameSpace());
-		vBC.setText(String.valueOf(notaValidadaAliquota.getValorBCImposto()));
+		vBC.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorBCImposto()));
 		
 		Element pICMS = new Element("pICMS",NotaFiscalUtil.getNameSpace());
-		pICMS.setText(String.valueOf(notaValidadaAliquota.getPercentualAliquota()));
+		pICMS.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getPercentualAliquota()));
 		
 		Element vICMSOp = new Element("vICMSOp",NotaFiscalUtil.getNameSpace());
-		vICMSOp.setText(String.valueOf(notaValidadaAliquota.getValorOperacaoImposto()));
+		vICMSOp.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorOperacaoImposto()));
 		
 	 
 	    element.removeContent();

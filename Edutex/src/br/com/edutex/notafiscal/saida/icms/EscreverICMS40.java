@@ -1,5 +1,7 @@
 package br.com.edutex.notafiscal.saida.icms;
 
+import java.util.Locale;
+
 import org.jdom2.Element;
 
 import br.com.edutex.logic.NotaValidadaAliquota;
@@ -25,13 +27,13 @@ public class EscreverICMS40 implements EscreverTributacao {
 	    cst.setText(notaValidadaAliquota.getCst().getNmCST());
 	   
 	   Element pICMSST = new Element("pICMSST",NotaFiscalUtil.getNameSpace());
-	   pICMSST.setText(String.valueOf(notaValidadaAliquota.getPercentualAliquotaST()));
+	   pICMSST.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getPercentualAliquotaST()));
 	   
 	   Element vICMSST = new Element("vICMSST",NotaFiscalUtil.getNameSpace());
-	   vICMSST.setText(String.valueOf(notaValidadaAliquota.getValorAliquotaST()));
+	   vICMSST.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorAliquotaST()));
 	   
 	   Element vICMSDeson = new Element("vICMSDeson",NotaFiscalUtil.getNameSpace());
-	   vICMSDeson.setText(String.valueOf(notaValidadaAliquota.getValorAliquotaDesoneracao()));
+	   vICMSDeson.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorAliquotaDesoneracao()));
 	   
 	   Element motDesICMS = new Element("motDesICMS",NotaFiscalUtil.getNameSpace());
 	   motDesICMS.setText(String.valueOf(notaValidadaAliquota.getMotivoDesoneracaoImposto()));

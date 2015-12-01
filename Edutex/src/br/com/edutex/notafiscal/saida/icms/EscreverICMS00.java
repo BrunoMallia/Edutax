@@ -1,10 +1,13 @@
 package br.com.edutex.notafiscal.saida.icms;
 
+import java.util.Locale;
+
 import org.jdom2.Element;
 
 import br.com.edutex.logic.NotaValidadaAliquota;
 import br.com.edutex.notafiscal.interfaces.EscreverTributacao;
 import br.com.edutex.notafiscal.util.NotaFiscalUtil;
+import br.com.edutex.util.NumeroFormato;
 
 public class EscreverICMS00 implements EscreverTributacao {
 
@@ -18,7 +21,7 @@ public class EscreverICMS00 implements EscreverTributacao {
 		
 		Element elementICMS = new Element("ICMS"+ notaValidadaAliquota.getCst().getNmCST(), NotaFiscalUtil.getNameSpace());
 		
-	    Element origem = new Element("Origem",NotaFiscalUtil.getNameSpace());
+	    Element origem = new Element("orig",NotaFiscalUtil.getNameSpace());
 	    origem.setText(String.valueOf(notaValidadaAliquota.getOrigem()));
 	    
 	    Element cst = new Element("CST",NotaFiscalUtil.getNameSpace());
@@ -28,13 +31,13 @@ public class EscreverICMS00 implements EscreverTributacao {
 	    modBC.setText( String.valueOf(notaValidadaAliquota.getModBCImposto()));
 	    
 	    Element valorBC = new Element("vBC",NotaFiscalUtil.getNameSpace());
-	    valorBC.setText(String.valueOf(notaValidadaAliquota.getValorBCImposto()));
+	    valorBC.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorBCImposto()));
 		
 	    Element percentualImposto = new Element("pICMS",NotaFiscalUtil.getNameSpace());
-	    percentualImposto.setText(String.valueOf(notaValidadaAliquota.getPercentualAliquota()));
+	    percentualImposto.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getPercentualAliquota()));
 	    
 	    Element valorImposto = new Element("vICMS",NotaFiscalUtil.getNameSpace());
-	    valorImposto.setText(String.valueOf(notaValidadaAliquota.getValorAliquota()));
+	    valorImposto.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorAliquota()));
 	    
 	    element.removeContent();
 	    elementICMS.addContent(origem);

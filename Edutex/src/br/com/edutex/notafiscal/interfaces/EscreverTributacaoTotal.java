@@ -1,10 +1,9 @@
 package br.com.edutex.notafiscal.interfaces;
 
-import java.util.List;
 
 import org.jdom2.Element;
 
-import br.com.edutex.logic.NotaValidadaItem;
+import br.com.edutex.logic.NotaValidada;
 
 public interface EscreverTributacaoTotal {
 	
@@ -14,6 +13,6 @@ public interface EscreverTributacaoTotal {
 	 * @param nodeTotal
 	 * @return Element
 	 */
-	Element escreverTributacaoTotalNota(List<NotaValidadaItem> listaNotaValidadaItem,
+	Element escreverTributacaoTotalNota(NotaValidada notaValidada,
 			Element nodeTotal);
 }

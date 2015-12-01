@@ -1,6 +1,7 @@
 package br.com.edutex.notafiscal.saida.icms;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.jdom2.Element;
 
@@ -22,10 +23,12 @@ public class EscreverICMSTotal implements EscreverTributacaoTotal {
 	 */
 	@Override
 	public Element escreverTributacaoTotalNota(
-			List<NotaValidadaItem> listaNotaValidadaItem, Element nodeTotal) {
+			NotaValidada notaValid, Element nodeTotal) {
 		
-		float valorICMS = 0,valorPIS = 0,valorCOFINS = 0,valorIPI = 0,valorICMSDeson = 0, valorST = 0, valorProd = 0, valorBCST = 0,valorBC = 0;;
+		float valorICMS = 0,valorPIS = 0,valorCOFINS = 0,valorIPI = 0,valorICMSDeson = 0, valorST = 0, valorProd = 0,valorBC = 0;;
 		
+		
+		List<NotaValidadaItem> listaNotaValidadaItem = notaValid.getNotasValidadaItem(); 
 		
 		for (NotaValidadaItem notaValidadaItem: listaNotaValidadaItem) {
 			
@@ -83,75 +86,80 @@ public class EscreverICMSTotal implements EscreverTributacaoTotal {
 		Element icmsTotal = new Element("ICMSTot", NotaFiscalUtil.getNameSpace());
 		
 		Element vBC = new Element("vBC", NotaFiscalUtil.getNameSpace());
-		vBC.setText(String.valueOf(valorBC));
+		vBC.setText(String.format(Locale.US,"%.2f",valorBC));
 		
 		Element vICMS = new Element("vICMS", NotaFiscalUtil.getNameSpace());
-		vICMS.setText(String.valueOf(valorICMS));
+		vICMS.setText(String.format(Locale.US,"%.2f",valorICMS));
 		
 		Element vICMSDeson = new Element("vICMSDeson", NotaFiscalUtil.getNameSpace());
-		vICMSDeson.setText(String.valueOf(valorICMSDeson));
+		vICMSDeson.setText(String.format(Locale.US,"%.2f",valorICMSDeson));
 		
 		Element vBCST = new Element("vBCST", NotaFiscalUtil.getNameSpace());
-		vBCST.setText(String.valueOf(valorBC));
+		vBCST.setText(String.format(Locale.US,"%.2f",valorBC));
 		
 		Element vST = new Element("vST", NotaFiscalUtil.getNameSpace());
 		//como eu pego o valor de Substituição Tributári Total
-		vST.setText(String.valueOf(valorST));
+		vST.setText(String.format(Locale.US,"%.2f",valorST));
 		
 		Element vProd = new Element("vProd",NotaFiscalUtil.getNameSpace());
-		vProd.setText(String.valueOf(valorProd));
+		vProd.setText(String.format(Locale.US,"%.2f",valorProd));
 		
 		Element vFrete = new Element("vFrete", NotaFiscalUtil.getNameSpace());
-		vFrete.setText(String.valueOf(notaValidada.getValorFrete()));
+		vFrete.setText(String.format(Locale.US,"%.2f",notaValidada.getValorFrete()));
 		
 		Element vSeg = new Element("vSeg", NotaFiscalUtil.getNameSpace());
-		vSeg.setText(String.valueOf(notaValidada.getValorSeguro()));
+		vSeg.setText(String.format(Locale.US,"%.2f",notaValidada.getValorSeguro()));
 		
 		Element vDesc = new Element("vDesc", NotaFiscalUtil.getNameSpace());
-		vDesc.setText(String.valueOf(notaValidada.getValorDescontoTotal()));
+		vDesc.setText(String.format(Locale.US,"%.2f",notaValidada.getValorDescontoTotal()));
 		
 		Element vII = new Element("vII", NotaFiscalUtil.getNameSpace());
-		vII.setText(String.valueOf(notaValidada.getValorII()));
+		vII.setText(String.format(Locale.US,"%.2f",notaValidada.getValorII()));
 		
 		Element vIPI = new Element("vIPI", NotaFiscalUtil.getNameSpace());
-		vIPI.setText(String.valueOf(valorIPI));
+		vIPI.setText(String.format(Locale.US,"%.2f",valorIPI));
 		
 		Element vPIS = new Element("vPIS", NotaFiscalUtil.getNameSpace());
-		vPIS.setText(String.valueOf(valorPIS));
+		vPIS.setText(String.format(Locale.US,"%.2f",valorPIS));
 		
 		Element vCOFINS = new Element("vCOFINS", NotaFiscalUtil.getNameSpace());
-		vCOFINS.setText(String.valueOf(valorCOFINS));
+		vCOFINS.setText(String.format(Locale.US,"%.2f",valorCOFINS));
 		
 		Element vOutros = new Element("vOutro", NotaFiscalUtil.getNameSpace());
-		vOutros.setText(String.valueOf(notaValidada.getValorOutros()));
+		vOutros.setText(String.format(Locale.US,"%.2f",notaValidada.getValorOutros()));
 		
 		Element vNF = new Element("vNF", NotaFiscalUtil.getNameSpace());
-		vNF.setText(String.valueOf(notaValidada.getValorNotaFiscal()));
+		vNF.setText(String.format(Locale.US,"%.2f",valorProd + notaValidada.getValorFrete() + notaValidada.getValorSeguro() - notaValidada.getValorDescontoTotal() + 
+				notaValidada.getValorII()));
 		
 		Element vTotTrib = new Element("vTotTrib", NotaFiscalUtil.getNameSpace());
 		//soma todos os impostos?
-		vTotTrib.setText(String.valueOf(notaValidada.getValorTotalTributacao()));
+		vTotTrib.setText(String.format(Locale.US,"%.2f",notaValid.getValorTotalTributacao()));
 		
 		
 		nodeTotal.removeContent();
-		nodeTotal.addContent(icmsTotal);
-		nodeTotal.addContent(vBC);
-		nodeTotal.addContent(vICMS);
-		nodeTotal.addContent(vICMSDeson);
-		nodeTotal.addContent(vBCST);
-		nodeTotal.addContent(vST);
-		nodeTotal.addContent(vProd);
-		nodeTotal.addContent(vFrete);
-		nodeTotal.addContent(vSeg);
-		nodeTotal.addContent(vDesc);
-		nodeTotal.addContent(vII);
-		nodeTotal.addContent(vIPI);
-		nodeTotal.addContent(vPIS);
-		nodeTotal.addContent(vCOFINS);
-		nodeTotal.addContent(vOutros);
-		nodeTotal.addContent(vNF);
-		nodeTotal.addContent(vTotTrib);
 		
+		
+		
+		icmsTotal.addContent(vBC);
+		icmsTotal.addContent(vICMS);
+		icmsTotal.addContent(vICMSDeson);
+		icmsTotal.addContent(vBCST);
+		icmsTotal.addContent(vST);
+		icmsTotal.addContent(vProd);
+		icmsTotal.addContent(vFrete);
+		icmsTotal.addContent(vSeg);
+		icmsTotal.addContent(vDesc);
+		icmsTotal.addContent(vII);
+		icmsTotal.addContent(vIPI);
+		icmsTotal.addContent(vPIS);
+		icmsTotal.addContent(vCOFINS);
+		icmsTotal.addContent(vOutros);
+		icmsTotal.addContent(vNF);
+		icmsTotal.addContent(vTotTrib);
+
+		nodeTotal.addContent(icmsTotal);
+				
 		return nodeTotal;
 	}
 

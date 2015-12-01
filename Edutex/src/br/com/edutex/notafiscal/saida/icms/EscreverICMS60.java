@@ -1,5 +1,7 @@
 package br.com.edutex.notafiscal.saida.icms;
 
+import java.util.Locale;
+
 import org.jdom2.Element;
 
 import br.com.edutex.logic.NotaValidadaAliquota;
@@ -26,10 +28,10 @@ public class EscreverICMS60 implements EscreverTributacao {
 	    cst.setText(notaValidadaAliquota.getCst().getNmCST());
 	   
 		Element vBCSRet = new Element("vBCSRet",NotaFiscalUtil.getNameSpace());
-		vBCSRet.setText(String.valueOf(notaValidadaAliquota.getValorBCSTRetidoAnteriormente()));
+		vBCSRet.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorBCSTRetidoAnteriormente()));
 	    
 		Element vICMSRet = new Element("vICMSSTRet",NotaFiscalUtil.getNameSpace());
-		vICMSRet.setText(String.valueOf(notaValidadaAliquota.getValorImpostoSTRetidoAnteriormente()));
+		vICMSRet.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorImpostoSTRetidoAnteriormente()));
 		
 		
 	    element.removeContent();

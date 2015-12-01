@@ -1,5 +1,7 @@
 package br.com.edutex.notafiscal.saida.icms;
 
+import java.util.Locale;
+
 import org.jdom2.Element;
 
 import br.com.edutex.logic.NotaValidadaAliquota;
@@ -25,10 +27,10 @@ public class EscreverICMSSN101 implements EscreverTributacao {
 	CSOSN.setText(String.valueOf(notaValidadaAliquota.getCsosn()));
 	
 	Element pCredSN = new Element("pCredSN",NotaFiscalUtil.getNameSpace());
-	pCredSN.setText(String.valueOf(notaValidadaAliquota.getPercentualCreditoSN()));
+	pCredSN.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getPercentualCreditoSN()));
     
 	Element vCredICMSSN = new Element("vCredICMSSN",NotaFiscalUtil.getNameSpace());
-	vCredICMSSN.setText(String.valueOf(notaValidadaAliquota.getValorCreditoSN()));
+	vCredICMSSN.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorCreditoSN()));
 	
 	elementICMS.removeContent();
 	elementICMS.addContent(origem);

@@ -153,7 +153,7 @@ public class ValidarRegraForm extends Action {
 						 switch (notaAliquota.getCst().getNmCST()) {
 							
 						 	case "00":
-							    notaAliquota.setValorBCImposto((validacao.getNfeInicial().getNotaValidada().getValorProdutoTotal() + validacao.getNfeInicial().getNotaValidada().getValorFrete()));	
+							    notaAliquota.setValorBCImposto((notaItem.getValorBrutoProduto() + validacao.getNfeInicial().getNotaValidada().getValorFrete()));	
 								notaAliquota.setPercentualAliquota((float) listaImpostoNcmCadastrado.get(0).getNuPercentualImposto());
 								notaAliquota.setValorAliquota(NumeroFormato.getNumero2digitos((float)(notaAliquota.getPercentualAliquota()/100) * notaAliquota.getValorBCImposto()));
 								break;
@@ -163,7 +163,7 @@ public class ValidarRegraForm extends Action {
 								break;
 							
 							case "60":
-								 notaAliquota.setValorBCSTRetidoAnteriormente(NumeroFormato.getNumero2digitos((validacao.getNfeInicial().getNotaValidada().getValorProdutoTotal() + validacao.getNfeInicial().getNotaValidada().getValorFrete())));
+								 notaAliquota.setValorBCSTRetidoAnteriormente(NumeroFormato.getNumero2digitos((notaItem.getValorBrutoProduto() + validacao.getNfeInicial().getNotaValidada().getValorFrete())));
 								 notaAliquota.setValorImpostoSTRetidoAnteriormente(NumeroFormato.getNumero2digitos((float)listaImpostoNcmCadastrado.get(0).getNuPercentualImposto() * (notaAliquota.getValorBCSTRetidoAnteriormente()/100)));
 								break;
 							default:

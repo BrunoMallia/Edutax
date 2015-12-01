@@ -18,22 +18,22 @@ public class EscreverCOFINSST implements EscreverTributacao {
 		Element elementoCOFINS = new Element("COFINSST",NotaFiscalUtil.getNameSpace());
 		
 		Element vBC = new Element("vBC",NotaFiscalUtil.getNameSpace());
-		vBC.setText(String.valueOf(notaValidadaAliquota.getValorBCImposto()));
+		vBC.setText(String.format("%.2f",notaValidadaAliquota.getValorBCImposto()));
 		
 		Element pCOFINS = new Element("pCOFINS",NotaFiscalUtil.getNameSpace());
-		pCOFINS.setText(String.valueOf(notaValidadaAliquota.getPercentualAliquota()));
+		pCOFINS.setText(String.format("%.2f",notaValidadaAliquota.getPercentualAliquota()));
 		
 		Element qBCProd = new Element("qBCProd", NotaFiscalUtil.getNameSpace());
 		qBCProd.setText(String.valueOf(notaValidadaAliquota.getQuantidadeBCProduto()));
 		
 		Element vAliqProd = new Element("vAliqProd",NotaFiscalUtil.getNameSpace());
-		vAliqProd.setText(String.valueOf(notaValidadaAliquota.getValorAliquotaProduto()));
+		vAliqProd.setText(String.format("%.2f",notaValidadaAliquota.getValorAliquotaProduto()));
 		
 		Element vCOFINS = new Element("vCOFINS",NotaFiscalUtil.getNameSpace());
-		vCOFINS.setText(String.valueOf(notaValidadaAliquota.getValorAliquota()));
+		vCOFINS.setText(String.format("%.2f",notaValidadaAliquota.getValorAliquota()));
 		
 		Element pBCOp = new Element("pBCOp", NotaFiscalUtil.getNameSpace());
-		pBCOp.setText(String.valueOf(notaValidadaAliquota.getPercentualBCOperacao()));
+		pBCOp.setText(String.format("%.2f",notaValidadaAliquota.getPercentualBCOperacao()));
 		
 		Element ufst = new Element("UFST", NotaFiscalUtil.getNameSpace());
 		ufst.setText(String.valueOf(notaValidadaAliquota.getUfST()));

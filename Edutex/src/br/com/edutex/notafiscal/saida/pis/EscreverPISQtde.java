@@ -1,5 +1,7 @@
 package br.com.edutex.notafiscal.saida.pis;
 
+import java.util.Locale;
+
 import org.jdom2.Element;
 
 import br.com.edutex.logic.NotaValidadaAliquota;
@@ -20,10 +22,10 @@ public class EscreverPISQtde implements EscreverTributacao {
 	 qBCProd.setText(String.valueOf(notaValidadaAliquota.getQuantidadeBCProduto()));
 
 	 Element vAliqProd = new Element("vAliqProd",NotaFiscalUtil.getNameSpace());
-	 vAliqProd.setText(String.valueOf(notaValidadaAliquota.getValorAliquotaProduto()));
+	 vAliqProd.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorAliquotaProduto()));
 
 	 Element vPIS = new Element("vpIS",NotaFiscalUtil.getNameSpace());
-	 vPIS.setText(String.valueOf(notaValidadaAliquota.getValorAliquota()));
+	 vPIS.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorAliquota()));
 	 
 	 element.removeContent();
 	 elementoPIS.addContent(cst);

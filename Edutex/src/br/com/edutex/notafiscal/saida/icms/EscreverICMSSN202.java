@@ -1,5 +1,7 @@
 package br.com.edutex.notafiscal.saida.icms;
 
+import java.util.Locale;
+
 import org.jdom2.Element;
 
 import br.com.edutex.logic.NotaValidadaAliquota;
@@ -30,19 +32,19 @@ public class EscreverICMSSN202 implements EscreverTributacao {
 	
 	
 	Element pMVAST = new Element("pMVAST",NotaFiscalUtil.getNameSpace());
-	pMVAST.setText(String.valueOf(notaValidadaAliquota.getPercentualMargemValorAdicionadoST()));
+	pMVAST.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getPercentualMargemValorAdicionadoST()));
 	
 	Element pRedBCST = new Element("pRedBCST",NotaFiscalUtil.getNameSpace());
-	pRedBCST.setText(String.valueOf(notaValidadaAliquota.getPercentualReducaoBCST()));
+	pRedBCST.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getPercentualReducaoBCST()));
 
 	Element vBCST = new Element("vBCST",NotaFiscalUtil.getNameSpace());
-	vBCST.setText(String.valueOf(notaValidadaAliquota.getValorBCST()));
+	vBCST.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorBCST()));
 	
 	Element pICMSST = new Element("pICMSST",NotaFiscalUtil.getNameSpace());
-	pICMSST.setText(String.valueOf(notaValidadaAliquota.getPercentualAliquotaST()));
+	pICMSST.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getPercentualAliquotaST()));
 	
 	Element vICMSST = new Element("vICMSST",NotaFiscalUtil.getNameSpace());
-	vICMSST.setText(String.valueOf(notaValidadaAliquota.getValorAliquotaST()));
+	vICMSST.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorAliquotaST()));
 	
 	elementICMS.removeContent();
 	elementICMS.addContent(origem);
