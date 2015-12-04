@@ -24,6 +24,7 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -36,10 +37,13 @@ import org.springframework.ui.jasperreports.JasperReportsUtils;
 import com.lowagie.text.pdf.codec.Base64.InputStream;
 
 import br.com.edutex.DAO.EmpresaDao;
+import br.com.edutex.DAO.GerarRelatorioDao;
 import br.com.edutex.DAO.TipoUsuarioDao;
 import br.com.edutex.logic.Empresa;
+import br.com.edutex.logic.NFE;
 import br.com.edutex.logic.TipoUsuario;
 import br.com.edutex.logic.Usuario;
+import br.com.edutex.logic.Validacao;
 import br.com.edutex.DAO.UsuarioDao;
 
 /**
@@ -54,14 +58,7 @@ public class GerarRelatorioForm extends Action {
 	
 	private InitialContext	initContext = null;
 	protected String datasourceName = "jdbc/Edutdb";
-	private final String QUERY_RELATORIO_NOTACOMPLEMENTAR = "SELECT nfe.dtupload as dataCriacao, nfe.nmnfe as nomeNota, nota.nmnfornecedor as fornecedor," +
-			"nota.ValorICMSTotal as totalICMS ,nota.valoripitotal as totalIPI,nota.valornotafiscal as totalNota," +
-			"nota.valorsttotal as totalSubsTributario,finalidade.nmfinalidade from NFE AS nfe inner join notavalidada as nota on nfe.cdnfe = nota.cdnfe " +
-		    "inner join validacao as validacao on validacao.nfegerada_cdnfe = nfe.cdnfe inner join " + 
-			"finalidadenfe as finalidade on finalidade.cdfinalidadenfe = validacao.finalidadenfe_cdfinalidadenfe " + 
-		    "right join empresa as emp on validacao.empresa_cdcnpj = emp.cdcnpj where nfe.notacomplementar = 't' group by emp.cdcnpj, nfe.dtupload,nfe.nmnfe" +
-			",nota.nmnfornecedor, nota.ValorICMSTotal,nota.valoripitotal, nota.valornotafiscal,nota.valorsttotal, finalidade.nmfinalidade";
-	
+
 	@Override 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -88,18 +85,15 @@ public class GerarRelatorioForm extends Action {
 
 		}
 		
-	
-			PreparedStatement statement = null;  
-	        ResultSet rs = null;  
 	        try {  
-	            statement = con.prepareStatement(QUERY_RELATORIO_NOTACOMPLEMENTAR);  
+	       
 	            
 	            
 	            
-	            rs = statement.executeQuery();  
-	            JRResultSetDataSource jrDataSource = new JRResultSetDataSource(rs);
+	            List<Object[]> listaObjetos = GerarRelatorioDao.getInstance().preencherRelatorioNotasComplementares(1);
 	            
-	            JasperPrint jp = JasperFillManager.fillReport(jasperReport, new HashMap(),jrDataSource);
+	            JRBeanCollectionDataSource beanollectionDataSource = new JRBeanCollectionDataSource(listaObjetos);
+	            JasperPrint jp = JasperFillManager.fillReport(jasperReport, new HashMap(),beanollectionDataSource);
 	            
 	            ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
 	            byteOut.write(JasperExportManager.exportReportToPdf(jp));
@@ -115,7 +109,7 @@ public class GerarRelatorioForm extends Action {
 	            servletOutput.flush();
 	            servletOutput.close();
 	          
-	        } catch (SQLException e) {  
+	        } catch (Exception e) {  
 	              e.printStackTrace();
 	        } 
 		

@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.SequenceGenerator;
@@ -22,6 +23,7 @@ import javax.persistence.SequenceGenerator;
  * @author bruno
  *
  */
+
 @Entity
 @SequenceGenerator(name="NFE_sequence", sequenceName="NFE_sequence",
 initialValue = 1, allocationSize = 1)

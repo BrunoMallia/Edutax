@@ -1,5 +1,7 @@
 package br.com.edutex.notafiscal.saida.ipi;
 
+import java.util.Locale;
+
 import org.jdom2.Element;
 
 import br.com.edutex.logic.NotaValidadaAliquota;
@@ -30,19 +32,19 @@ public class EscreverIPITrib implements EscreverTributacao {
 		cst.setText(notaValidadaAliquota.getCst().getNmCST());
 		
 		Element vBC = new Element("vBC", NotaFiscalUtil.getNameSpace());
-		vBC.setText(String.format("%.2f",notaValidadaAliquota.getValorBCImposto()));
+		vBC.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorBCImposto()));
 		
 		Element pIPI = new Element("pIPI", NotaFiscalUtil.getNameSpace());
-		pIPI.setText(String.format("%.2f",notaValidadaAliquota.getPercentualAliquota()));
+		pIPI.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getPercentualAliquota()));
 	
 		Element qUnid = new Element("qUnid", NotaFiscalUtil.getNameSpace());
 		qUnid.setText(String.valueOf(notaValidadaAliquota.getQuantidadeUnidadePadrao()));
 		
 		Element vUnid = new Element("vUnid", NotaFiscalUtil.getNameSpace());
-		vUnid.setText(String.format("%.2f",notaValidadaAliquota.getValorUnidadeTributavel()));
+		vUnid.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorUnidadeTributavel()));
 		
 		Element vIPI = new Element("vIPI", NotaFiscalUtil.getNameSpace());
-		vIPI.setText(String.format("%.2f",notaValidadaAliquota.getValorAliquota()));
+		vIPI.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorAliquota()));
 		
 	
 		element.addContent(cst);

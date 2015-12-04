@@ -27,7 +27,7 @@ public class DownloadNotaForm extends Action {
 		
 
 		 if (byteArrayOutput != null) {
-		response.setHeader("Content-disposition","attachment;filename= " + request.getSession(true).getAttribute("nomeNfe"));
+		response.setHeader("Content-disposition","attachment;filename= " + request.getSession(true).getAttribute("nomeNfe") + ".xml");
         response.setContentType("application/xml");
         response.setCharacterEncoding("UTF-8");
         response.setContentLength(byteArrayOutput.size());

@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
@@ -24,6 +25,7 @@ import javax.persistence.TemporalType;
  * @author bruno
  *
  */
+@NamedQuery(name="Validacao.gerarRelatorioNotasComplementaresPorEmpresa", query="SELECT nfe.dtUpload, nfe.nmNfe FROM Validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp where emp.cdcnpj = :cdcnpj group by nfe.dtUpload,nfe.nmNfe")
 @Entity
 @SequenceGenerator(name="validacao_sequence", sequenceName="validacao_sequence",
 initialValue = 1, allocationSize = 1)

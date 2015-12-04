@@ -291,7 +291,7 @@ public class NotaFiscal {
 				 
 					
 					XMLOutputter xmlOutput = new XMLOutputter();
-					xmlOutput.setFormat(xmlOutput.getFormat().setLineSeparator(LineSeparator.NONE).setTextMode(TextMode.TRIM).setEncoding("UTF-8"));
+					xmlOutput.setFormat(xmlOutput.getFormat().setLineSeparator(LineSeparator.NONE).setTextMode(TextMode.TRIM));
 					
 			
 				    
