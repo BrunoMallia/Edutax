@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="edutNotasComplementaresPorEmpresa" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="14067b6d-6f1d-49e3-9e7d-6a7e94ecb78b">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="edutNotasRejeitadasPorEmpresa" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="14067b6d-6f1d-49e3-9e7d-6a7e94ecb78b">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="14"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ID_EMPRESA" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
 	<parameter name="nomeEmpresa" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="nfeGerada.dtUpload" class="java.util.GregorianCalendar"/>
-	<field name="nfeGerada.nmNfe" class="java.lang.String"/>
-	<field name="nfeGerada.notaValidada.valorICMSTotal" class="java.lang.Float"/>
-	<field name="nfeGerada.notaValidada.nmFornecedor" class="java.lang.String"/>
-	<field name="nfeGerada.notaValidada.valorIPITotal" class="java.lang.Float"/>
-	<field name="nfeGerada.notaValidada.valorNotaFiscal" class="java.lang.Float"/>
-	<field name="nfeGerada.notaValidada.valorTotalTributacao" class="java.lang.String"/>
-	<field name="finalidadeNfe.nmFinalidade" class="java.lang.String"/>
+	<field name="validacao.dtValidacao" class="java.util.GregorianCalendar"/>
+	<field name="validacao.nfeGerada.nmNfe" class="java.lang.String"/>
+	<field name="validacao.nfeGerada.notaValidada.valorICMSTotal" class="java.lang.Float"/>
+	<field name="validacao.nfeGerada.notaValidada.nmFornecedor" class="java.lang.String"/>
+	<field name="validacao.nfeGerada.notaValidada.valorNotaFiscal" class="java.lang.Float"/>
+	<field name="validacao.finalidadeNfe.nmFinalidade" class="java.lang.String"/>
+	<field name="tpErro.nmTipoErro" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -28,7 +30,7 @@
 				<textElement verticalAlignment="Middle">
 					<font size="26" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Relatório de Notas Complementeares por Empresa]]></text>
+				<text><![CDATA[Relatório de Notas Rejeitadas por Empresa]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -63,7 +65,7 @@
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="83" y="13" width="94" height="20" uuid="f312bed9-08ed-49fe-9731-5ce5a80f16d7"/>
+				<reportElement x="77" y="14" width="106" height="20" uuid="c0d94363-26a8-415b-9223-5cfd1999f680"/>
 				<textFieldExpression><![CDATA[$P{nomeEmpresa}]]></textFieldExpression>
 			</textField>
 		</band>
@@ -124,10 +126,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="18" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Total ICMS]]></text>
+				<text><![CDATA[Valor da Nota]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="420" y="0" width="74" height="59" backcolor="#CCCCFF" uuid="b420d66f-d370-45b9-87bf-0b1822db2002"/>
+				<reportElement mode="Opaque" x="420" y="0" width="180" height="59" backcolor="#CCCCFF" uuid="b420d66f-d370-45b9-87bf-0b1822db2002"/>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 					<pen lineColor="#3333FF"/>
 					<topPen lineWidth="0.75" lineColor="#0000FF"/>
@@ -138,10 +140,10 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="18" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Total IPI]]></text>
+				<text><![CDATA[Erro]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="494" y="0" width="89" height="59" backcolor="#CCCCFF" uuid="ff7acab0-f937-41f3-92d5-33baac5e3275"/>
+				<reportElement mode="Opaque" x="600" y="0" width="98" height="59" backcolor="#CCCCFF" uuid="ff7acab0-f937-41f3-92d5-33baac5e3275"/>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 					<pen lineColor="#3333FF"/>
 					<topPen lineWidth="0.75" lineColor="#0000FF"/>
@@ -153,20 +155,6 @@
 					<font size="18" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
 				<text><![CDATA[Total da Nota]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="583" y="0" width="116" height="59" backcolor="#CCCCFF" uuid="f239154f-b095-4fde-938a-d9c69922f10f"/>
-				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
-					<pen lineColor="#3333FF"/>
-					<topPen lineWidth="0.75" lineColor="#0000FF"/>
-					<leftPen lineWidth="0.75" lineColor="#0000FF"/>
-					<bottomPen lineWidth="0.75" lineColor="#0000FF"/>
-					<rightPen lineWidth="0.75" lineColor="#0000FF"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="18" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-				</textElement>
-				<text><![CDATA[Total Subs. Tributária]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="699" y="0" width="103" height="59" backcolor="#CCCCFF" uuid="f864056e-ae09-433e-b6fe-ab84932b2132"/>
@@ -187,36 +175,32 @@
 	<detail>
 		<band height="25" splitType="Stretch">
 			<textField>
-				<reportElement x="92" y="4" width="130" height="20" uuid="d7e2321f-04a8-4049-91b1-fa3f80c5fb70"/>
-				<textFieldExpression><![CDATA[$F{nfeGerada.nmNfe}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="222" y="4" width="117" height="16" uuid="7a2775a8-433f-4c36-aa8a-e1d656a3cf7b"/>
-				<textFieldExpression><![CDATA[$F{nfeGerada.notaValidada.nmFornecedor}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="340" y="4" width="81" height="20" uuid="f275eda4-e9db-4d38-bbb4-c7f400a4c74c"/>
-				<textFieldExpression><![CDATA[$F{nfeGerada.notaValidada.valorICMSTotal}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="494" y="3" width="89" height="20" uuid="88dda793-6bc1-4e96-af23-38cc129c42df"/>
-				<textFieldExpression><![CDATA[$F{nfeGerada.notaValidada.valorNotaFiscal}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="420" y="3" width="74" height="20" uuid="5ceab27c-0eed-4e3f-a21f-3048507bc11d"/>
-				<textFieldExpression><![CDATA[$F{nfeGerada.notaValidada.valorIPITotal}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="1" y="2" width="91" height="21" uuid="67e89e02-8a66-45b1-8030-ab23699e22e1"/>
-				<textFieldExpression><![CDATA[new Date($F{nfeGerada.dtUpload}.getTimeInMillis())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new Date($F{validacao.dtValidacao}.getTimeInMillis())]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="583" y="3" width="116" height="20" uuid="707c7036-d880-4aa2-a2b9-03db9408b372"/>
-				<textFieldExpression><![CDATA[$F{nfeGerada.notaValidada.valorTotalTributacao}]]></textFieldExpression>
+				<reportElement x="340" y="0" width="80" height="22" uuid="fec0be94-498f-4935-9090-0800a4d8d354"/>
+				<textFieldExpression><![CDATA[$F{validacao.nfeGerada.notaValidada.valorNotaFiscal}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="700" y="2" width="100" height="20" uuid="3d1635df-772e-483a-95b9-5ade33dafa0d"/>
-				<textFieldExpression><![CDATA[$F{finalidadeNfe.nmFinalidade}]]></textFieldExpression>
+				<reportElement x="92" y="0" width="130" height="22" uuid="f479c730-c97f-444b-828f-a406d385ce03"/>
+				<textFieldExpression><![CDATA[$F{validacao.nfeGerada.nmNfe}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="222" y="0" width="117" height="22" uuid="6da521c7-3b6e-4805-8036-d0b3e6cd2d2b"/>
+				<textFieldExpression><![CDATA[$F{validacao.nfeGerada.notaValidada.nmFornecedor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="699" y="0" width="103" height="23" uuid="77076cd3-c9e0-46dd-9b3b-b5ef892f92f4"/>
+				<textFieldExpression><![CDATA[$F{validacao.finalidadeNfe.nmFinalidade}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="598" y="3" width="100" height="20" uuid="20ad9a03-98c8-430a-9403-c0f6f89cd6a3"/>
+				<textFieldExpression><![CDATA[$F{validacao.nfeGerada.notaValidada.valorICMSTotal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="418" y="3" width="180" height="20" uuid="f0105788-89d2-4488-87b6-7dd57e964129"/>
+				<textFieldExpression><![CDATA[$F{tpErro.nmTipoErro}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

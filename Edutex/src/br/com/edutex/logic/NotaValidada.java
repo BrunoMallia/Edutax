@@ -27,7 +27,7 @@ public class NotaValidada implements Serializable {
 	private int cdnfe;
 	
 	@Column (nullable = false)
-	private String nmNFornecedor;
+	private String nmFornecedor;
 	
 	@Column(nullable = true)
 	private int cUF;
@@ -47,7 +47,7 @@ public class NotaValidada implements Serializable {
 	private float valorBCTotal;
 	
 	@Column (nullable = true)
-	private float ValorICMSTotal;
+	private float valorICMSTotal;
 	
 	@Column (nullable = true)
 	private float valorICMSDesonTotal;
@@ -190,12 +190,12 @@ public class NotaValidada implements Serializable {
 
 
 
-	public String getNmNFornecedor() {
-		return nmNFornecedor;
+	public String getNmFornecedor() {
+		return nmFornecedor;
 	}
 
-	public void setNmNFornecedor(String nmNFornecedor) {
-		this.nmNFornecedor = nmNFornecedor;
+	public void setNmFornecedor(String nmFornecedor) {
+		this.nmFornecedor = nmFornecedor;
 	}
 
 
@@ -258,14 +258,14 @@ public class NotaValidada implements Serializable {
 	 */
 	@Column(nullable = true)
 	public float getValorICMSTotal() {
-		return ValorICMSTotal;
+		return valorICMSTotal;
 	}
 
 	/**
 	 * @param valorICMSTotal the valorICMSTotal to set
 	 */
 	public void setValorICMSTotal(float valorICMSTotal) {
-		ValorICMSTotal = valorICMSTotal;
+		valorICMSTotal = valorICMSTotal;
 	}
 
 	/**

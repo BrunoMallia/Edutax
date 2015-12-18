@@ -8,8 +8,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -44,6 +47,8 @@ import br.com.edutex.logic.NFE;
 import br.com.edutex.logic.TipoUsuario;
 import br.com.edutex.logic.Usuario;
 import br.com.edutex.logic.Validacao;
+import br.com.edutex.logic.ValidacaoErro;
+import br.com.edutex.notafiscal.util.ValidacaoAux;
 import br.com.edutex.DAO.UsuarioDao;
 
 /**
@@ -56,8 +61,6 @@ import br.com.edutex.DAO.UsuarioDao;
 
 public class GerarRelatorioForm extends Action {
 	
-	private InitialContext	initContext = null;
-	protected String datasourceName = "jdbc/Edutdb";
 
 	@Override 
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -66,34 +69,75 @@ public class GerarRelatorioForm extends Action {
 		
 		JasperReport jasperReport = null;
 		String nomeRelatorio = null;
-	    initContext = new InitialContext();
-		Context envContext = (Context) initContext.lookup("java:/comp/env");
-		DataSource dataSource = (DataSource) envContext.lookup(datasourceName);
-		Connection con = dataSource.getConnection();
+	
 		
 		
 		String tipoRelatorioParam = request.getParameter("tipoRelatorio");
+		List<Validacao> listaValidacao = null;
+		List<ValidacaoErro> listaValidacaoErro = null;
+        
+        String parametroDataInicial = request.getParameter("dataInicio");
+        String parametroDataFinal = request.getParameter("dataFinal");
+        String[] parametrosEmpresa = request.getParameter("empresaSelect").split(";");
+        
+        int empresaId = Integer.parseInt(parametrosEmpresa[0]);
+        JRBeanCollectionDataSource beanollectionDataSource = null;
+		
 		
 		if (tipoRelatorioParam != null) {
 				switch (tipoRelatorioParam) {
 				case "1":
 					jasperReport=(JasperReport)JRLoader.loadObject(getClass().getResource("/br/com/edutex/ireport/edutNotasComplementaresPorEmpresa.jasper"));
 					nomeRelatorio = new String("relatorioNotaComplementarPorEmpresa.pdf");
+			        if (parametroDataInicial.equals("")) {
+		            	listaValidacao = GerarRelatorioDao.getInstance().preencherRelatorioNotasComplementares(empresaId);	
+		            } else {
+		            		listaValidacao = GerarRelatorioDao.getInstance().preencherRelatorioNotasComplementaresPorData(empresaId, parametroDataInicial, parametroDataFinal);	
+		            }
+			        
+			        beanollectionDataSource = new JRBeanCollectionDataSource(listaValidacao);
+		    
 					break;
+				
+				case "2":
+					jasperReport=(JasperReport)JRLoader.loadObject(getClass().getResource("/br/com/edutex/ireport/edutNotasRejeitadasPorEmpresa.jasper"));
+					nomeRelatorio = new String("relatorioNotaRejeitadasPorEmpresa.pdf");
+					if (parametroDataInicial.equals("")) {
+						listaValidacaoErro = GerarRelatorioDao.getInstance().preencherRelatorioNotasRejeitadas(empresaId);
+					} else {
+						listaValidacaoErro = GerarRelatorioDao.getInstance().preencherRelatorioNotasRejeitadasPorData(empresaId, parametroDataInicial, parametroDataFinal);
+					}
+					
+					beanollectionDataSource = new JRBeanCollectionDataSource(listaValidacaoErro);
+					break;
+					
+				case "3":	
+					jasperReport=(JasperReport)JRLoader.loadObject(getClass().getResource("/br/com/edutex/ireport/edutNotasAceitasPorEmpresa.jasper"));
+					nomeRelatorio = new String("relatorioAceitasPorEmpresa.pdf");
+					if (parametroDataInicial.equals("")) {
+						listaValidacao = GerarRelatorioDao.getInstance().preencherRelatorioNotasAceitas(empresaId);
+					} else {
+						listaValidacao = GerarRelatorioDao.getInstance().preencherRelatorioNotasComplementaresPorData(empresaId, parametroDataInicial, parametroDataFinal);
+					}
+					beanollectionDataSource = new JRBeanCollectionDataSource(listaValidacao);
+					break;
+					
+				case "4":
+					jasperReport=(JasperReport)JRLoader.loadObject(getClass().getResource("/br/com/edutex/ireport/edutNotasAceitasPorEmpresa.jasper"));
+					nomeRelatorio = new String("relatorioBaseCaulculoAtacadistaPorEmpresa.pdf");
+					List<ValidacaoAux> listaValidacaoAux = GerarRelatorioDao.getInstance().preencherRelatorioNotasAtacadistaPorEmpresa(empresaId);
+					beanollectionDataSource = new JRBeanCollectionDataSource(listaValidacaoAux);
+					break;
+							
 				
 				}
 
 		}
 		
 	        try {  
-	       
-	            
-	            
-	            
-	            List<Object[]> listaObjetos = GerarRelatorioDao.getInstance().preencherRelatorioNotasComplementares(1);
-	            
-	            JRBeanCollectionDataSource beanollectionDataSource = new JRBeanCollectionDataSource(listaObjetos);
-	            JasperPrint jp = JasperFillManager.fillReport(jasperReport, new HashMap(),beanollectionDataSource);
+	        	Map<String,Object> map = new HashMap<String,Object>();
+	        	map.put("nomeEmpresa", parametrosEmpresa[1].toString());
+	            JasperPrint jp = JasperFillManager.fillReport(jasperReport, map,beanollectionDataSource);
 	            
 	            ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
 	            byteOut.write(JasperExportManager.exportReportToPdf(jp));

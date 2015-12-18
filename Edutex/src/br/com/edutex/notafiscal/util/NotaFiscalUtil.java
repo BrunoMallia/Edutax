@@ -29,7 +29,7 @@ public class NotaFiscalUtil {
 		setNamesSpace(ConfiguracaoProp.getPropriedades().get("notafiscal.diretorio").toString());
 		nomeArquivo.append(NAMESPACE_NOTA_FISCAL + "\\");
 		nomeArquivo.append(nfe.getCdNfe());
-		nomeArquivo.append(nfe.getNotaValidada().getNmNFornecedor().replaceAll("[:|*|?|\\\"]", ""));
+		nomeArquivo.append(nfe.getNotaValidada().getNmFornecedor().replaceAll("[:|*|?|\\\"]", ""));
 		nomeArquivo.append(dt.format(data));
 		nomeArquivo.append(nfe.getNotaValidada().getFinNfe());
 		nomeArquivo.append(".xml");
@@ -48,7 +48,7 @@ public class NotaFiscalUtil {
 		SimpleDateFormat dt = new SimpleDateFormat("yyyymmddhhmm");
 		Date data = new Date();
 		nomeArquivo.append(nfe.getCdNfe());
-		nomeArquivo.append(nfe.getNotaValidada().getNmNFornecedor());
+		nomeArquivo.append(nfe.getNotaValidada().getNmFornecedor());
 		nomeArquivo.append(dt.format(data));
 		nomeArquivo.append(nfe.getNotaValidada().getFinNfe());
 		nomeArquivo.append(".xml");

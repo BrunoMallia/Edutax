@@ -139,6 +139,8 @@ public class ValidarRegraForm extends Action {
 								
 							 List<ImpostoNcm> listaImpostoNcmCadastrado = ImpostoNcmDao.getInstance().buscarImpostoNcm(notaItem.getNcm().getNmNCM(),
 							  			1, notaItem.getNcm().getEmpresa().getCdcnpj());
+							 
+							
 							
 							 if (listaImpostoNcmCadastrado == null) {
 									request.setAttribute("erro", "Imposto não foi cadastrado para o ncm: " + notaItem.getNcm().getNmNCM() + ",finalidade " 
@@ -159,6 +161,14 @@ public class ValidarRegraForm extends Action {
 							
 							case "10":
 								
+								break;
+								
+							case "20":
+								 notaAliquota.setPercentualReducaoBC((float)listaImpostoNcmCadastrado.get(0).getNcm().getCsts().get(0).getNuPercentualReducao());
+								notaAliquota.setValorBCImposto((notaItem.getValorBrutoProduto() + validacao.getNfeInicial().getNotaValidada().getValorFrete()));
+								notaAliquota.setValorBCImposto(notaAliquota.getValorBCImposto() - (notaAliquota.getValorBCImposto() * (notaAliquota.getPercentualReducaoBC()/100)));
+								notaAliquota.setPercentualAliquota((float) listaImpostoNcmCadastrado.get(0).getNuPercentualImposto());
+								notaAliquota.setValorAliquota(NumeroFormato.getNumero2digitos((float)(notaAliquota.getPercentualAliquota()/100) * (notaAliquota.getValorBCImposto())));
 								break;
 							
 							case "60":
@@ -188,12 +198,18 @@ public class ValidarRegraForm extends Action {
 				  			validacao.getFinalidadeNfe().getCdFinalidadeNfe(), notaItem.getNcm().getEmpresa().getCdcnpj());
 				
 				
-				// TRATAMENTO PARA A FINALIDADE DA NOTA FOR REVENDA(INDUSTRIALIZAÇÃO)
-				if (validacao.getFinalidadeNfe().getCdFinalidadeNfe() == 3 && listaImpostoNcmCadastrado.get(0).getNcm().getCsts().get(0).getNmCST().equals("00")) {
-			 		request.setAttribute("erro", "CST Cadastrado para o NCM " + notaItem.getNcm().getNmNCM() + ",finalidade " 
-			 				+ validacao.getFinalidadeNfe().getNmFinalidade() + ", é diferente da nota, a nota rejeitada.");
-					return mapping.findForward("erro");
-		
+				 if (validacao.getFinalidadeNfe().getCdFinalidadeNfe() == 3) {
+				
+				
+					if (listaImpostoNcmCadastrado.get(0).getNcm().getCsts().get(0).getNmCST().equals("20")) {
+						
+						 	notaAliquota.setPercentualReducaoBC((float)listaImpostoNcmCadastrado.get(0).getNcm().getCsts().get(0).getNuPercentualReducao());
+							notaAliquota.setValorBCImposto((notaItem.getValorBrutoProduto() + validacao.getNfeInicial().getNotaValidada().getValorFrete()));
+							notaAliquota.setValorBCImposto(notaAliquota.getValorBCImposto() - (notaAliquota.getValorBCImposto() * (notaAliquota.getPercentualReducaoBC()/100)));
+							notaAliquota.setPercentualAliquota((float) listaImpostoNcmCadastrado.get(0).getNuPercentualImposto());
+							notaAliquota.setValorAliquota(NumeroFormato.getNumero2digitos((float)(notaAliquota.getPercentualAliquota()/100) * (notaAliquota.getValorBCImposto())));
+					}	
+				
 				}
 					
 				if (!notaAliquota.getCst().getNmCST().equals("60")){
@@ -217,6 +233,19 @@ public class ValidarRegraForm extends Action {
 					 }
 					 
 					
+					
+				} else {
+					// TRATAMENTO PARA A FINALIDADE DA NOTA FOR REVENDA(INDUSTRIALIZAÇÃO)
+					if (listaImpostoNcmCadastrado.get(0).getNcm().getCsts().get(0).getNmCST().equals("00")) {
+				 		request.setAttribute("erro", "CST Cadastrado para o NCM " + notaItem.getNcm().getNmNCM() + ",finalidade " 
+				 				+ validacao.getFinalidadeNfe().getNmFinalidade() + ", é diferente da nota, a nota rejeitada.");
+						return mapping.findForward("erro");
+			
+					}
+					CST cstCadastrado = listaImpostoNcmCadastrado.get(0).getNcm().getCsts().get(0);
+				 	if (cstCadastrado != null) {
+				 		 notaAliquota.getCst().setNmCST(listaImpostoNcmCadastrado.get(0).getNcm().getCsts().get(0).getNmCST());
+				 	}
 					
 				}
 				

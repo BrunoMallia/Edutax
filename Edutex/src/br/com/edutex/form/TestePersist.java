@@ -103,7 +103,7 @@
 	 			NFE nfe1 = null;
 	 			
 	 		 	nfe1 = nota.lerXML(arquivo);
-	 			nfe1.getNotaValidada().setNmNFornecedor("FORNECEDOR TESTE");
+	 			nfe1.getNotaValidada().setNmFornecedor("FORNECEDOR TESTE");
 	 		 	nfe1.setDtUpload(Calendar.getInstance());
 	 		 
 	 			manager.persist(nfe1);

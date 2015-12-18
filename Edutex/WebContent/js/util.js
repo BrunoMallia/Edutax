@@ -1,4 +1,4 @@
-	
+﻿	
 /*
  * TIrando o alert do complete das requisições ajax
  * */

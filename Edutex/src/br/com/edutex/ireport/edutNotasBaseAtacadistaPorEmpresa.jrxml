@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="edutNotasComplementaresPorEmpresa" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="14067b6d-6f1d-49e3-9e7d-6a7e94ecb78b">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="edutNotasBaseAtacadistaPorEmpresa" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="14067b6d-6f1d-49e3-9e7d-6a7e94ecb78b">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="182"/>
 	<property name="ireport.y" value="14"/>
 	<parameter name="nomeEmpresa" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
-	<field name="nfeGerada.dtUpload" class="java.util.GregorianCalendar"/>
-	<field name="nfeGerada.nmNfe" class="java.lang.String"/>
-	<field name="nfeGerada.notaValidada.valorICMSTotal" class="java.lang.Float"/>
-	<field name="nfeGerada.notaValidada.nmFornecedor" class="java.lang.String"/>
-	<field name="nfeGerada.notaValidada.valorIPITotal" class="java.lang.Float"/>
-	<field name="nfeGerada.notaValidada.valorNotaFiscal" class="java.lang.Float"/>
-	<field name="nfeGerada.notaValidada.valorTotalTributacao" class="java.lang.String"/>
-	<field name="finalidadeNfe.nmFinalidade" class="java.lang.String"/>
+	<field name="dataCriacao" class="java.util.GregorianCalendar"/>
+	<field name="nmNotaLogica" class="java.lang.String"/>
+	<field name="nmFornecedor" class="java.lang.Float"/>
+	<field name="baseCalculoAtacadista" class="java.lang.String"/>
+	<field name="aliquotaIPI" class="java.lang.Float"/>
+	<field name="valorIPI" class="java.lang.Float"/>
+	<field name="finalidade" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -28,7 +27,7 @@
 				<textElement verticalAlignment="Middle">
 					<font size="26" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Relatório de Notas Complementeares por Empresa]]></text>
+				<text><![CDATA[Relatório de Notas de Base de Cálculo Atacadista ]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -99,7 +98,7 @@
 				<text><![CDATA[Nome da Nota(lógico)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="222" y="0" width="117" height="59" backcolor="#CCCCFF" uuid="aaa87503-ef42-474a-968d-5b929fce8a25"/>
+				<reportElement mode="Opaque" x="222" y="0" width="215" height="59" backcolor="#CCCCFF" uuid="aaa87503-ef42-474a-968d-5b929fce8a25"/>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 					<pen lineColor="#3333FF"/>
 					<topPen lineWidth="0.75" lineColor="#0000FF"/>
@@ -113,7 +112,7 @@
 				<text><![CDATA[Fornecedor]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="339" y="0" width="81" height="59" backcolor="#CCCCFF" uuid="a8ea6490-3866-4c7f-acee-740875151461"/>
+				<reportElement mode="Opaque" x="437" y="0" width="155" height="59" backcolor="#CCCCFF" uuid="a8ea6490-3866-4c7f-acee-740875151461"/>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 					<pen lineColor="#3333FF"/>
 					<topPen lineWidth="0.75" lineColor="#0000FF"/>
@@ -124,10 +123,11 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="18" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Total ICMS]]></text>
+				<text><![CDATA[Base de Cálculo
+Atacadista]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="420" y="0" width="74" height="59" backcolor="#CCCCFF" uuid="b420d66f-d370-45b9-87bf-0b1822db2002"/>
+				<reportElement mode="Opaque" x="592" y="1" width="118" height="58" backcolor="#CCCCFF" uuid="b420d66f-d370-45b9-87bf-0b1822db2002"/>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 					<pen lineColor="#3333FF"/>
 					<topPen lineWidth="0.75" lineColor="#0000FF"/>
@@ -138,10 +138,11 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="18" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Total IPI]]></text>
+				<text><![CDATA[Alíquota
+IPI	]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="494" y="0" width="89" height="59" backcolor="#CCCCFF" uuid="ff7acab0-f937-41f3-92d5-33baac5e3275"/>
+				<reportElement mode="Opaque" x="710" y="0" width="89" height="59" backcolor="#CCCCFF" uuid="ff7acab0-f937-41f3-92d5-33baac5e3275"/>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 					<pen lineColor="#3333FF"/>
 					<topPen lineWidth="0.75" lineColor="#0000FF"/>
@@ -152,71 +153,27 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="18" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
 				</textElement>
-				<text><![CDATA[Total da Nota]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="583" y="0" width="116" height="59" backcolor="#CCCCFF" uuid="f239154f-b095-4fde-938a-d9c69922f10f"/>
-				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
-					<pen lineColor="#3333FF"/>
-					<topPen lineWidth="0.75" lineColor="#0000FF"/>
-					<leftPen lineWidth="0.75" lineColor="#0000FF"/>
-					<bottomPen lineWidth="0.75" lineColor="#0000FF"/>
-					<rightPen lineWidth="0.75" lineColor="#0000FF"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="18" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-				</textElement>
-				<text><![CDATA[Total Subs. Tributária]]></text>
-			</staticText>
-			<staticText>
-				<reportElement mode="Opaque" x="699" y="0" width="103" height="59" backcolor="#CCCCFF" uuid="f864056e-ae09-433e-b6fe-ab84932b2132"/>
-				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
-					<pen lineColor="#3333FF"/>
-					<topPen lineWidth="0.75" lineColor="#0000FF"/>
-					<leftPen lineWidth="0.75" lineColor="#0000FF"/>
-					<bottomPen lineWidth="0.75" lineColor="#0000FF"/>
-					<rightPen lineWidth="0.75" lineColor="#0000FF"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="18" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
-				</textElement>
-				<text><![CDATA[Finalidade da Nota]]></text>
+				<text><![CDATA[Valor IPI]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="25" splitType="Stretch">
 			<textField>
-				<reportElement x="92" y="4" width="130" height="20" uuid="d7e2321f-04a8-4049-91b1-fa3f80c5fb70"/>
-				<textFieldExpression><![CDATA[$F{nfeGerada.nmNfe}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="222" y="4" width="117" height="16" uuid="7a2775a8-433f-4c36-aa8a-e1d656a3cf7b"/>
-				<textFieldExpression><![CDATA[$F{nfeGerada.notaValidada.nmFornecedor}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="340" y="4" width="81" height="20" uuid="f275eda4-e9db-4d38-bbb4-c7f400a4c74c"/>
-				<textFieldExpression><![CDATA[$F{nfeGerada.notaValidada.valorICMSTotal}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="494" y="3" width="89" height="20" uuid="88dda793-6bc1-4e96-af23-38cc129c42df"/>
-				<textFieldExpression><![CDATA[$F{nfeGerada.notaValidada.valorNotaFiscal}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="420" y="3" width="74" height="20" uuid="5ceab27c-0eed-4e3f-a21f-3048507bc11d"/>
-				<textFieldExpression><![CDATA[$F{nfeGerada.notaValidada.valorIPITotal}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="1" y="2" width="91" height="21" uuid="67e89e02-8a66-45b1-8030-ab23699e22e1"/>
-				<textFieldExpression><![CDATA[new Date($F{nfeGerada.dtUpload}.getTimeInMillis())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new Date($F{dataCriacao}.getTimeInMillis())]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="583" y="3" width="116" height="20" uuid="707c7036-d880-4aa2-a2b9-03db9408b372"/>
-				<textFieldExpression><![CDATA[$F{nfeGerada.notaValidada.valorTotalTributacao}]]></textFieldExpression>
+				<reportElement x="92" y="2" width="130" height="20" uuid="51e3b327-1d92-48e5-b1a2-773c7e248f18"/>
+				<textFieldExpression><![CDATA[$F{nmNotaLogica}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="700" y="2" width="100" height="20" uuid="3d1635df-772e-483a-95b9-5ade33dafa0d"/>
-				<textFieldExpression><![CDATA[$F{finalidadeNfe.nmFinalidade}]]></textFieldExpression>
+				<reportElement x="222" y="2" width="215" height="21" uuid="9fe2a456-ebcb-4a93-895b-b3ec15309947"/>
+				<textFieldExpression><![CDATA[$F{nmFornecedor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="437" y="1" width="155" height="19" uuid="ac822756-1839-41dd-bb7e-24b7e90d8edd"/>
+				<textFieldExpression><![CDATA[$F{baseCalculoAtacadista}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

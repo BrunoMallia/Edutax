@@ -36,14 +36,10 @@ table tr td {
 					<label>Tipo de Relat&oacute;rio</label> 
 					<select id="tipoRelatorio" name="tipoRelatorio">
 						<option value="0">Selecione uma op&ccedil;&atilde;o</option>
-						<!-- <option value="metas">Total de metas</option> -->
-						<!-- <option value="metas_falhas">N&uacute;meros de metas com
-							falhas</option>
-						<option value="atacadista">Base de c&aacute;lculo
-							atacadista</option> -->
-						<!-- <option value="aliquita">Diferen&ccedil;a de
-							al&iacute;quota</option> -->
-							<option value="1" >Notas Complementares</option>
+						<option value="1" >Notas complementares por Empresa</option>
+						<option value="2" >Notas rejeitadas por Empresa</option>
+						<option value="3" >Notas aceitas por Empresa</option>
+						<option value="4" >Notas de base de c&aacute;culo atacadista</option>
 					</select> 
 					
 				</div>
@@ -52,18 +48,18 @@ table tr td {
 					<span> <label>Empresas</label> <select name="empresaSelect">
 									<option value="0">Todas</option>
 							<c:forEach items="${empresas}" var="empresa" >
-									<option  value="${empresa.cdcnpj}"><c:out value="${empresa.nmEmpresa}"></c:out></option>
+									<option  value="${empresa.cdcnpj};${empresa.nmEmpresa}"><c:out value="${empresa.nmEmpresa}"></c:out></option>
 								</c:forEach>		
 	
 					</select>
 					</span>
 				</div>
 				
-					<div id="validateForm">
+					<div id="validateFormDate">
 						<label>De</label> 
-						<input type="text" id="txtFromDate" />
+						<input type="text" id="txtFromDate" name="dataInicio" />
 						<label>At&eacute;</label>
-						<input type="text" id="txtToDate" />
+						<input type="text" id="txtToDate"  name="dataFinal" />
 					</div>
 				
 				<div>

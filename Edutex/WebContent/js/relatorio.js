@@ -7,7 +7,7 @@
 $(document).ready(function(){
     
     $("#nota_fiscal").change(function () {
-    	alert ($(this).val());
+    	
     	relatorio = $(this).val();
     	if(relatorio == "nada"){
     		
@@ -45,11 +45,13 @@ $(document).ready(function(){
     	var dataFim = $.datepicker.parseDate('dd/mm/yy', $("#txtToDate").val()) ;
     	
    
+    	if (dataFim != null) {
+    		if ( dataInicio > dataFim ) {
+        		error = error + "- A data de Início deve ser menor que a data de fim <br/>" 
+        		
+        	}
+    	} 
     	
-    	if ( dataInicio > dataFim ) {
-    		error = error + "- A data de Início deve ser menor que a data de fim <br/>" 
-    		
-    	}
     	
     	
     	if(dataInicio != null && !validarData($.datepicker.formatDate('dd/mm/yy', dataInicio))) {

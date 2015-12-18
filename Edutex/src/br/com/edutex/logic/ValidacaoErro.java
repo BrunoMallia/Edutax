@@ -9,20 +9,25 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 
 /**
  * @author bruno
  *
  */
+@NamedQueries({
+	@NamedQuery(name="ValidacaoErro.gerarRelatorioNotasRejeitadas", query="Select erro from ValidacaoErro erro INNER JOIN erro.validacao v INNER JOIN v.empresa emp where emp.cdcnpj= :cdcnpj group by emp.nmEmpresa, erro.idValidacaoErro"),
+	@NamedQuery(name="ValidacaoErro.gerarRelatorioNotasRejeitadasData", query="Select erro from ValidacaoErro erro INNER JOIN erro.validacao v INNER JOIN v.empresa emp where emp.cdcnpj= :cdcnpj and v.dtValidacao between :dataInicial and :dataFinal  group by emp.nmEmpresa, erro.idValidacaoErro")
+})
 @Entity
-@SequenceGenerator(name="validacaoErro_sequence", sequenceName="validacaoErro_sequence",
+@SequenceGenerator(name="validacaoErro_sequence", sequenceName="validacaoErro_sequence", 
 initialValue = 1, allocationSize = 1)
 public class ValidacaoErro {
 	
 	@Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "validacaoErro_sequence")
 	private int idValidacaoErro;;
-	
 	
 	
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.MERGE})

@@ -149,7 +149,7 @@ public class NotaFiscal {
 					}
 				}
 				
-				nodeXNome.setText(String.valueOf(nota.getNmNFornecedor()));
+				nodeXNome.setText(String.valueOf(nota.getNmFornecedor()));
 				nodeCRT.setText(String.valueOf(nota.getCRT()));
 				
 				int count  = 0;
@@ -451,7 +451,7 @@ public class NotaFiscal {
 					}
 				}
 				
-				nota.setNmNFornecedor(nodeXNome.getValue());
+				nota.setNmFornecedor(nodeXNome.getValue());
 				nota.setCRT(Integer.parseInt(nodeCRT.getValue()));
 				
 				Element nodeICMS = null, nodePIS = null, nodeCOFINS = null, nodeIPI = null, nodePISST = null, nodeCOFINSST = null;

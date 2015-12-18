@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
@@ -25,7 +26,12 @@ import javax.persistence.TemporalType;
  * @author bruno
  *
  */
-@NamedQuery(name="Validacao.gerarRelatorioNotasComplementaresPorEmpresa", query="SELECT nfe.dtUpload, nfe.nmNfe FROM Validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp where emp.cdcnpj = :cdcnpj group by nfe.dtUpload,nfe.nmNfe")
+@NamedQueries({
+@NamedQuery(name="Validacao.gerarRelatorioNotasComplementaresPorEmpresa", query="SELECT v FROM Validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp where emp.cdcnpj = :cdcnpj and nfe.notaComplementar = 't' group by emp.nmEmpresa,v.idValidacao order by emp.nmEmpresa"),
+@NamedQuery(name="Validacao.gerarRelatorioNotasComplementaresPorEmpresaData", query="SELECT v FROM Validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp where emp.cdcnpj = :cdcnpj and nfe.notaComplementar = 't' and nfe.dtUpload between :dataInicial and :dataFinal group by emp.nmEmpresa,v.idValidacao order by emp.nmEmpresa"),
+@NamedQuery(name="Validacao.gerarRelatorioNotasAceitasPorEmpresa", query="SELECT v FROM ValidacaoErro ve RIGHT JOIN ve.validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp  where emp.cdcnpj = :cdcnpj and ve IS NULL order by emp.nmEmpresa"),
+@NamedQuery(name="Validacao.gerarRelatorioNotasAceitasPorEmpresaData", query="SELECT v FROM ValidacaoErro ve RIGHT JOIN ve.validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp where emp.cdcnpj = :cdcnpj and ve IS NULL and v.dtValidacao between :dataInicial and :dataFinal group by emp.nmEmpresa,v.idValidacao order by emp.nmEmpresa")
+})
 @Entity
 @SequenceGenerator(name="validacao_sequence", sequenceName="validacao_sequence",
 initialValue = 1, allocationSize = 1)
