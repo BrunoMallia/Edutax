@@ -64,7 +64,7 @@ public class ImpostoNcmDao  extends AbstractDao{
 	public List<ImpostoNcm> buscarImpostoNcm(String ncm, int cdFinalidadeNota, int cdEmpresa) {
 		
 		String query = "SELECT imp from ImpostoNcm AS imp WHERE imp.ncm.nmncm = :ncm and"
-				+ " imp.finalidadeNfe.cdFinalidadeNfe = :cdFinalidade  ORDER BY imp.tipoImposto.cdTipoImposto";
+				+ " imp.finalidadeNfe.cdFinalidadeNfe = :cdFinalidade ORDER BY imp.tipoImposto.cdTipoImposto";
 		 
 		 return  (List<ImpostoNcm>) getEntityManager().createQuery(query)
 					.setParameter("ncm", ncm)

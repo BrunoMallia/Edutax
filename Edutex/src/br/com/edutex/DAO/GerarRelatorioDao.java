@@ -41,9 +41,19 @@ public class GerarRelatorioDao extends AbstractDao {
 	 */
 	public List<Validacao> preencherRelatorioNotasComplementares(int cdcnpj) {
 	   return  (List<Validacao>) getEntityManager()
-			   .createNamedQuery("Validacao.gerarRelatorioNotasComplementaresPorEmpresa", Validacao.class)
+			   .createNamedQuery("Validacao.gerarRelatorioNotasComplementares", Validacao.class)
 			   .setParameter("cdcnpj", cdcnpj).getResultList();
 	}
+	
+	/**
+	 * método que lista as notas complementares sem filtro de empresa
+	 * @return List<Valid>
+	 */
+	public List<Validacao> preencherRelatorioNotasComplementares() {
+		   return  (List<Validacao>) getEntityManager()
+				   .createNamedQuery("Validacao.gerarRelatorioNotasComplementaresPorEmpresa", Validacao.class)
+				   .getResultList();
+		}
 	
 	/**
 	 * Método que lista as notas rejeitadas por empresa
@@ -54,6 +64,18 @@ public class GerarRelatorioDao extends AbstractDao {
 		return (List<ValidacaoErro>) getEntityManager().
 				createNamedQuery("ValidacaoErro.gerarRelatorioNotasRejeitadas", ValidacaoErro.class).
 				setParameter("cdcnpj", cdcnpj).getResultList();
+	}
+	
+	
+	/**
+	 * Método que lista as notas rejeitadas por empresa
+	 * @param cdcnpj
+	 * @return List<ValidacaoErro>
+	 */
+	public List<ValidacaoErro> preencherRelatorioNotasRejeitadas() {
+		return (List<ValidacaoErro>) getEntityManager().
+				createNamedQuery("ValidacaoErro.gerarRelatorioNotasRejeitadasPorEmpresa", ValidacaoErro.class).
+				getResultList();
 	}
 	
 	/**
@@ -74,8 +96,26 @@ public class GerarRelatorioDao extends AbstractDao {
 		}
 		
 		
-		return (List<Validacao>) getEntityManager().createNamedQuery("Validacao.gerarRelatorioNotasComplementaresPorEmpresaData", Validacao.class)
+		return (List<Validacao>) getEntityManager().createNamedQuery("Validacao.gerarRelatorioNotasComplementaresPorData", Validacao.class)
 				.setParameter("cdcnpj", cdcnpj)
+				.setParameter("dataInicial",new GregorianCalendar(Integer.parseInt(dataInicialArray[2]),Integer.parseInt(dataInicialArray[1]), Integer.parseInt(dataInicialArray[0])), TemporalType.DATE)
+				.setParameter("dataFinal", !dataFinal.equals("")?new GregorianCalendar(Integer.parseInt(dataFinalArray[2]),Integer.parseInt(dataFinalArray[1]), Integer.parseInt(dataFinalArray[0])):Calendar.getInstance(), TemporalType.DATE)
+				.getResultList();
+	}
+	
+	
+	public List<Validacao> preencherRelatorioNotasComplementaresPorData(String dataInicial
+			, String dataFinal) {
+		
+		String[] dataInicialArray = dataInicial.split("/");
+		String[] dataFinalArray = null;
+		
+		if (dataFinal != null) {
+			dataFinalArray = dataFinal.split("/");
+		}
+		
+		
+		return (List<Validacao>) getEntityManager().createNamedQuery("Validacao.gerarRelatorioNotasComplementaresPorEmpresaData", Validacao.class)
 				.setParameter("dataInicial",new GregorianCalendar(Integer.parseInt(dataInicialArray[2]),Integer.parseInt(dataInicialArray[1]), Integer.parseInt(dataInicialArray[0])), TemporalType.DATE)
 				.setParameter("dataFinal", !dataFinal.equals("")?new GregorianCalendar(Integer.parseInt(dataFinalArray[2]),Integer.parseInt(dataFinalArray[1]), Integer.parseInt(dataFinalArray[0])):Calendar.getInstance(), TemporalType.DATE)
 				.getResultList();
@@ -109,17 +149,53 @@ public class GerarRelatorioDao extends AbstractDao {
 	
 	
 	/**
+	 * método que lista as notas rejeitadas por empresa e com fitro de data
+	 * @param cdcnpj
+	 * @param dataInicial
+	 * @param dataFinal
+	 * @return List<ValidacaoErro>
+	 */
+	public List<ValidacaoErro> preencherRelatorioNotasRejeitadasPorData(String dataInicial
+			, String dataFinal) {
+		
+		String[] dataInicialArray = dataInicial.split("/");
+		String[] dataFinalArray = null;
+		
+		if (dataFinal != null) {
+			dataFinalArray = dataFinal.split("/");
+		}
+		
+		
+		return (List<ValidacaoErro>) getEntityManager().createNamedQuery("ValidacaoErro.gerarRelatorioNotasRejeitadasDataEmpresa", ValidacaoErro.class)
+				.setParameter("dataInicial",new GregorianCalendar(Integer.parseInt(dataInicialArray[2]),Integer.parseInt(dataInicialArray[1]), Integer.parseInt(dataInicialArray[0])), TemporalType.DATE)
+				.setParameter("dataFinal", !dataFinal.equals("")?new GregorianCalendar(Integer.parseInt(dataFinalArray[2]),Integer.parseInt(dataFinalArray[1]), Integer.parseInt(dataFinalArray[0])):Calendar.getInstance(), TemporalType.DATE)
+				.getResultList();
+	}
+	
+	
+	
+	/**
 	 * Método que lista os relatórios de notas aceitas
 	 * @param cdCnpj
 	 * @return List<Validacao
 	 * >
 	 */
 	public List<Validacao> preencherRelatorioNotasAceitas(int cdCnpj) {
-		return (List<Validacao>) getEntityManager().createNamedQuery("Validacao.gerarRelatorioNotasAceitasPorEmpresa", Validacao.class)
+		return (List<Validacao>) getEntityManager().createNamedQuery("Validacao.gerarRelatorioNotasAceitas", Validacao.class)
 				.setParameter("cdcnpj", cdCnpj)
 				.getResultList();
 	}
 	
+	/**
+	 * Método que lista os relatórios de notas aceitas agrupadas por empresa
+	 * @param cdCnpj
+	 * @return List<Validacao
+	 * >
+	 */
+	public List<Validacao> preencherRelatorioNotasAceitas() {
+		return (List<Validacao>) getEntityManager().createNamedQuery("Validacao.gerarRelatorioNotasAceitasPorEmpresa", Validacao.class)
+				.getResultList();
+	}
 	
 	
 	/**
@@ -130,9 +206,43 @@ public class GerarRelatorioDao extends AbstractDao {
 	 * @return List<Validacao>
 	 */
 	public List<Validacao> preencherRelatorioNotasAceitas(int cdCnpj, String dataInicial, String dataFinal) {
+		
+		String[] dataInicialArray = dataInicial.split("/");
+		String[] dataFinalArray = null;
+		
+		if (dataFinal != null) {
+			dataFinalArray = dataFinal.split("/");
+		}
+		
+		
+		return (List<Validacao>) getEntityManager().createNamedQuery("Validacao.gerarRelatorioNotasAceitasPorData", Validacao.class)
+				.setParameter("cdcnpj", cdCnpj)
+				.setParameter("dataInicial", new GregorianCalendar(Integer.parseInt(dataInicialArray[2]), Integer.parseInt(dataInicialArray[1]), Integer.parseInt(dataInicialArray[0])),TemporalType.DATE)
+				.setParameter("dataFinal", !dataFinal.equals("")?new GregorianCalendar(Integer.parseInt(dataFinalArray[2]),Integer.parseInt(dataFinalArray[1]), Integer.parseInt(dataFinalArray[0])):Calendar.getInstance(), TemporalType.DATE) 
+				.getResultList();
+	}
+	
+	/**
+	 * Método que lista as notas aceitas por empresa e filtro com data
+	 * @param cdCnpj
+	 * @param dataInicial
+	 * @param dataFinal
+	 * @return List<Validacao>
+	 */
+	public List<Validacao> preencherRelatorioNotasAceitas( String dataInicial, String dataFinal) {
+		String[] dataInicialArray = dataInicial.split("/");
+		String[] dataFinalArray = null;
+		
+		if (dataFinal != null) {
+			dataFinalArray = dataFinal.split("/");
+		}
+		
+		
+		
+		
 		return (List<Validacao>) getEntityManager().createNamedQuery("Validacao.gerarRelatorioNotasAceitasPorEmpresaData", Validacao.class)
-				.setParameter("dataInicial", dataInicial)
-				.setParameter("dataFinal", !dataFinal.equals("")?dataFinal:Calendar.getInstance().toString())
+				.setParameter("dataInicial", new GregorianCalendar(Integer.parseInt(dataInicialArray[2]), Integer.parseInt(dataInicialArray[1]), Integer.parseInt(dataInicialArray[0])),TemporalType.DATE)
+				.setParameter("dataFinal", !dataFinal.equals("")?new GregorianCalendar(Integer.parseInt(dataFinalArray[2]),Integer.parseInt(dataFinalArray[1]), Integer.parseInt(dataFinalArray[0])):Calendar.getInstance(), TemporalType.DATE)
 				.getResultList();
 	}	
 	

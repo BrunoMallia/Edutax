@@ -29,6 +29,14 @@ public class LoginEmpresaForm extends Action {
 		//todo 
 		//recuperar lista de empresas do login JAAS
 		
+		if(!request.getSession().getAttribute("urlnavegation").toString().equals(request.getContextPath() + "/principal/carregaEmpresa.do"))
+		{
+			//request.getServletContext().getRequestDispatcher(request.getSession().getAttribute("urlnavegation").toString()).forward(request, response);
+			response.sendRedirect(request.getSession().getAttribute("urlnavegation").toString());
+			return null;
+			
+		}
+		
 		return mapping.findForward("sucess");
 	
 	}

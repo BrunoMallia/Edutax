@@ -596,8 +596,8 @@ Fimse*/
 			 			  mensagem.append("<b>Nota recusada.Valor do PIS inconsistente.</b><br/> NCM do item: " + notaItemNota.getNcm().getNmNCM() + " valor da alíquota nota: " + valorPISNota + " valor aliquota cadastrada: " +
 			 					 valorPISCadastrado + "<br/>");
 			 		  } else {
-			 			  if ((valorPISNota - valorPISCadastrado) > 0.01) {
-			 				  validacao.getNfeGerada().setNotaComplementar(true);
+			 			  if (NumeroFormato.getNumero2digitos(valorPISNota - valorPISCadastrado) > 0.01) {
+			 				  validacao.getNfeInicial().setNotaComplementar(true);
 			 			  }
 			 		  }
 			 	  }
@@ -610,7 +610,7 @@ Fimse*/
 			 		    float valorCOFINSCadastrado = NumeroFormato.getNumero2digitos((float) (notaItemNota.getValorBrutoProduto() * (listaImpostoNcmCadastrado.get(2).getNuPercentualImposto()/100)));
 			 		    
 			 		    
-			 		 if (NumeroFormato.getNumero2digitos((valorCOFINSNota - valorCOFINSCadastrado)) < -0.01) {
+			 		 if (NumeroFormato.getNumero2digitos((valorCOFINSCadastrado - valorCOFINSNota)) < -0.01) {
 			 			 ValidacaoErro validacaoErro = new ValidacaoErro();
 			 			 validacaoErro.setTxtAuxiliar("Ncm do item: " + notaItemNota.getNcm().getNmNCM() + " valor da alíquota da nota: " + valorCOFINSNota + " valor alíquota cadastrada: " +
 			 					valorCOFINSCadastrado + "<br/>");
@@ -624,7 +624,7 @@ Fimse*/
 			 					valorCOFINSCadastrado + "<br/>");
 			 		 } else {
 			 			 
-			 			 if ((valorCOFINSNota - valorCOFINSCadastrado) > 0.01) {
+			 			 if (NumeroFormato.getNumero2digitos(valorCOFINSNota - valorCOFINSCadastrado) > 0.01) {
 			 				 validacao.getNfeInicial().setNotaComplementar(true);
 			 			 }
 			 		 }

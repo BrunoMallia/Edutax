@@ -23,11 +23,13 @@
           <h3 class="login_title">
             bem Vindo ao sistema SGCC 
           </h3>
-          
+			
+			 
+	        	<form method="post" action="<%=request.getContextPath()%>/principal/home.do">
 	        
-             	<form method="post" action="home.do">
 		            <div class="lgn" id="divEmpresas">
-		            	<br/><br/>
+		            	<br/>
+		            	<br/>	
 						<h6>Selecione uma empresa:</h6>
 						<select class="options_empresa" name="opcoesEmpresa">
 								<c:forEach items="${listaEmpresas}" var="empresa" >

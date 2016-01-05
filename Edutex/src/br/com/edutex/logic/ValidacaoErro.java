@@ -19,7 +19,9 @@ import javax.persistence.SequenceGenerator;
  */
 @NamedQueries({
 	@NamedQuery(name="ValidacaoErro.gerarRelatorioNotasRejeitadas", query="Select erro from ValidacaoErro erro INNER JOIN erro.validacao v INNER JOIN v.empresa emp where emp.cdcnpj= :cdcnpj group by emp.nmEmpresa, erro.idValidacaoErro"),
-	@NamedQuery(name="ValidacaoErro.gerarRelatorioNotasRejeitadasData", query="Select erro from ValidacaoErro erro INNER JOIN erro.validacao v INNER JOIN v.empresa emp where emp.cdcnpj= :cdcnpj and v.dtValidacao between :dataInicial and :dataFinal  group by emp.nmEmpresa, erro.idValidacaoErro")
+	@NamedQuery(name="ValidacaoErro.gerarRelatorioNotasRejeitadasPorEmpresa", query="Select erro from ValidacaoErro erro INNER JOIN erro.validacao v INNER JOIN v.empresa emp group by emp.nmEmpresa, erro.idValidacaoErro"),
+	@NamedQuery(name="ValidacaoErro.gerarRelatorioNotasRejeitadasData", query="Select erro from ValidacaoErro erro LEFT JOIN erro.validacao v INNER JOIN v.empresa emp where emp.cdcnpj= :cdcnpj and v.dtValidacao between :dataInicial and :dataFinal  group by erro.idValidacaoErro"),
+	@NamedQuery(name="ValidacaoErro.gerarRelatorioNotasRejeitadasDataEmpresa", query="Select erro from ValidacaoErro erro INNER JOIN erro.validacao v INNER JOIN v.empresa emp where v.dtValidacao between :dataInicial and :dataFinal  group by emp.nmEmpresa, erro.idValidacaoErro")
 })
 @Entity
 @SequenceGenerator(name="validacaoErro_sequence", sequenceName="validacaoErro_sequence", 

@@ -27,10 +27,14 @@ import javax.persistence.TemporalType;
  *
  */
 @NamedQueries({
-@NamedQuery(name="Validacao.gerarRelatorioNotasComplementaresPorEmpresa", query="SELECT v FROM Validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp where emp.cdcnpj = :cdcnpj and nfe.notaComplementar = 't' group by emp.nmEmpresa,v.idValidacao order by emp.nmEmpresa"),
-@NamedQuery(name="Validacao.gerarRelatorioNotasComplementaresPorEmpresaData", query="SELECT v FROM Validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp where emp.cdcnpj = :cdcnpj and nfe.notaComplementar = 't' and nfe.dtUpload between :dataInicial and :dataFinal group by emp.nmEmpresa,v.idValidacao order by emp.nmEmpresa"),
-@NamedQuery(name="Validacao.gerarRelatorioNotasAceitasPorEmpresa", query="SELECT v FROM ValidacaoErro ve RIGHT JOIN ve.validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp  where emp.cdcnpj = :cdcnpj and ve IS NULL order by emp.nmEmpresa"),
-@NamedQuery(name="Validacao.gerarRelatorioNotasAceitasPorEmpresaData", query="SELECT v FROM ValidacaoErro ve RIGHT JOIN ve.validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp where emp.cdcnpj = :cdcnpj and ve IS NULL and v.dtValidacao between :dataInicial and :dataFinal group by emp.nmEmpresa,v.idValidacao order by emp.nmEmpresa")
+@NamedQuery(name="Validacao.gerarRelatorioNotasComplementares", query="SELECT v FROM Validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp where emp.cdcnpj = :cdcnpj and nfe.notaComplementar = 't' group by emp.nmEmpresa,v.idValidacao order by emp.nmEmpresa"),
+@NamedQuery(name="Validacao.gerarRelatorioNotasComplementaresPorEmpresa", query="SELECT v FROM Validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp where  nfe.notaComplementar = 't' group by emp.nmEmpresa,v.idValidacao order by emp.nmEmpresa"),
+@NamedQuery(name="Validacao.gerarRelatorioNotasComplementaresPorData", query="SELECT v FROM Validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp where emp.cdcnpj = :cdcnpj and nfe.notaComplementar = 't' and nfe.dtUpload between :dataInicial and :dataFinal group by emp.nmEmpresa,v.idValidacao order by emp.nmEmpresa"),
+@NamedQuery(name="Validacao.gerarRelatorioNotasComplementaresPorEmpresaData", query="SELECT v FROM Validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp where nfe.notaComplementar = 't' and nfe.dtUpload between :dataInicial and :dataFinal group by emp.nmEmpresa,v.idValidacao order by emp.nmEmpresa"),
+@NamedQuery(name="Validacao.gerarRelatorioNotasAceitas", query="SELECT v FROM ValidacaoErro ve RIGHT JOIN ve.validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp  where emp.cdcnpj = :cdcnpj and ve IS NULL order by emp.nmEmpresa"),
+@NamedQuery(name="Validacao.gerarRelatorioNotasAceitasPorEmpresa", query="SELECT v FROM ValidacaoErro ve RIGHT JOIN ve.validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp  where  ve IS NULL order by emp.nmEmpresa"),
+@NamedQuery(name="Validacao.gerarRelatorioNotasAceitasPorEmpresaData", query="SELECT v FROM ValidacaoErro ve RIGHT JOIN ve.validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp  where  ve IS NULL and v.dtValidacao between :dataInicial and :dataFinal order by emp.nmEmpresa"),
+@NamedQuery(name="Validacao.gerarRelatorioNotasAceitasPorData", query="SELECT v FROM ValidacaoErro ve RIGHT JOIN ve.validacao v INNER JOIN v.nfeGerada nfe INNER JOIN v.empresa emp where emp.cdcnpj = :cdcnpj and ve IS NULL and v.dtValidacao between :dataInicial and :dataFinal group by emp.nmEmpresa,v.idValidacao order by emp.nmEmpresa")
 })
 @Entity
 @SequenceGenerator(name="validacao_sequence", sequenceName="validacao_sequence",

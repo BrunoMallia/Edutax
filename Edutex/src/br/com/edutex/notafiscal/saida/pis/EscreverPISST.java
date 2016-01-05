@@ -19,7 +19,7 @@ public class EscreverPISST implements EscreverTributacao {
 	 vBC.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorBCImposto()));
 	 
 	 Element pPIS = new Element("pPIS",NotaFiscalUtil.getNameSpace());
-	 pPIS.setText(String.format(Locale.US,"%.2f",String.valueOf(notaValidadaAliquota.getPercentualAliquota())));
+	 pPIS.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getPercentualAliquota()));
 	 
 	 Element vPIS = new Element("vpIS",NotaFiscalUtil.getNameSpace());
 	 vPIS.setText(String.format(Locale.US,"%.2f",notaValidadaAliquota.getValorAliquota()));

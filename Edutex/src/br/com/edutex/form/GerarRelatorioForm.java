@@ -89,10 +89,17 @@ public class GerarRelatorioForm extends Action {
 				case "1":
 					jasperReport=(JasperReport)JRLoader.loadObject(getClass().getResource("/br/com/edutex/ireport/edutNotasComplementaresPorEmpresa.jasper"));
 					nomeRelatorio = new String("relatorioNotaComplementarPorEmpresa.pdf");
-			        if (parametroDataInicial.equals("")) {
-		            	listaValidacao = GerarRelatorioDao.getInstance().preencherRelatorioNotasComplementares(empresaId);	
+			        if (parametroDataInicial.equals("") ) {
+			        	if (empresaId != 0)
+			        		listaValidacao = GerarRelatorioDao.getInstance().preencherRelatorioNotasComplementares(empresaId);
+			        	else
+			        		listaValidacao = GerarRelatorioDao.getInstance().preencherRelatorioNotasComplementares();
+			        	
 		            } else {
-		            		listaValidacao = GerarRelatorioDao.getInstance().preencherRelatorioNotasComplementaresPorData(empresaId, parametroDataInicial, parametroDataFinal);	
+		            	if (empresaId != 0)
+		            		listaValidacao = GerarRelatorioDao.getInstance().preencherRelatorioNotasComplementaresPorData(empresaId, parametroDataInicial, parametroDataFinal);
+		            	else
+		            		listaValidacao = GerarRelatorioDao.getInstance().preencherRelatorioNotasComplementaresPorData(parametroDataInicial, parametroDataFinal);
 		            }
 			        
 			        beanollectionDataSource = new JRBeanCollectionDataSource(listaValidacao);
@@ -103,9 +110,17 @@ public class GerarRelatorioForm extends Action {
 					jasperReport=(JasperReport)JRLoader.loadObject(getClass().getResource("/br/com/edutex/ireport/edutNotasRejeitadasPorEmpresa.jasper"));
 					nomeRelatorio = new String("relatorioNotaRejeitadasPorEmpresa.pdf");
 					if (parametroDataInicial.equals("")) {
-						listaValidacaoErro = GerarRelatorioDao.getInstance().preencherRelatorioNotasRejeitadas(empresaId);
+						if(empresaId != 0) {
+							listaValidacaoErro = GerarRelatorioDao.getInstance().preencherRelatorioNotasRejeitadas(empresaId);
+						} else {
+							listaValidacaoErro = GerarRelatorioDao.getInstance().preencherRelatorioNotasRejeitadas();
+						}
+						
 					} else {
-						listaValidacaoErro = GerarRelatorioDao.getInstance().preencherRelatorioNotasRejeitadasPorData(empresaId, parametroDataInicial, parametroDataFinal);
+						if (empresaId != 0)
+							listaValidacaoErro = GerarRelatorioDao.getInstance().preencherRelatorioNotasRejeitadasPorData(empresaId, parametroDataInicial, parametroDataFinal);
+						else 
+							listaValidacaoErro = GerarRelatorioDao.getInstance().preencherRelatorioNotasRejeitadasPorData(parametroDataInicial, parametroDataFinal);
 					}
 					
 					beanollectionDataSource = new JRBeanCollectionDataSource(listaValidacaoErro);
@@ -115,9 +130,16 @@ public class GerarRelatorioForm extends Action {
 					jasperReport=(JasperReport)JRLoader.loadObject(getClass().getResource("/br/com/edutex/ireport/edutNotasAceitasPorEmpresa.jasper"));
 					nomeRelatorio = new String("relatorioAceitasPorEmpresa.pdf");
 					if (parametroDataInicial.equals("")) {
+						if (empresaId != 0)
 						listaValidacao = GerarRelatorioDao.getInstance().preencherRelatorioNotasAceitas(empresaId);
+						else
+						listaValidacao = GerarRelatorioDao.getInstance().preencherRelatorioNotasAceitas();	
 					} else {
-						listaValidacao = GerarRelatorioDao.getInstance().preencherRelatorioNotasComplementaresPorData(empresaId, parametroDataInicial, parametroDataFinal);
+						if (empresaId != 0)
+							listaValidacao = GerarRelatorioDao.getInstance().preencherRelatorioNotasAceitas(empresaId, parametroDataInicial, parametroDataFinal);
+						else
+							listaValidacao = GerarRelatorioDao.getInstance().preencherRelatorioNotasAceitas(parametroDataInicial, parametroDataFinal);
+						
 					}
 					beanollectionDataSource = new JRBeanCollectionDataSource(listaValidacao);
 					break;
@@ -136,7 +158,10 @@ public class GerarRelatorioForm extends Action {
 		
 	        try {  
 	        	Map<String,Object> map = new HashMap<String,Object>();
-	        	map.put("nomeEmpresa", parametrosEmpresa[1].toString());
+	        	if (parametrosEmpresa.length > 1) {
+	        		map.put("nomeEmpresa", parametrosEmpresa[1].toString());
+	        	}
+	        	
 	            JasperPrint jp = JasperFillManager.fillReport(jasperReport, map,beanollectionDataSource);
 	            
 	            ByteArrayOutputStream byteOut = new ByteArrayOutputStream();

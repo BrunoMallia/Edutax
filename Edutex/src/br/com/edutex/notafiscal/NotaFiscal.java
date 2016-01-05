@@ -411,7 +411,8 @@ public class NotaFiscal {
 				
 				
 				nota.setcUF(Integer.parseInt(nodecUF.getValue()));
-				nfe.setNmNfe(nodecNF.getValue());
+				nfe.setNmNfe(nfe.getNmFilePath().substring(nfe.getNmFilePath().lastIndexOf("\\")+1, nfe.getNmFilePath().length()));
+				//nfe.setNmNfe(nodecNF.getValue());
 				nota.setFinNfe(Integer.parseInt(nodeFinNFe.getValue()));
 				nota.setIndFinal(Integer.parseInt(nodeIndFinal.getValue()));
 

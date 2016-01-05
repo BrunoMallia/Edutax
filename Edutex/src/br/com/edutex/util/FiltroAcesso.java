@@ -67,7 +67,10 @@ public class FiltroAcesso implements Filter {
 		   }
 		   
 		  User usuario = (User)request.getUserPrincipal();
-		   
+		  if (!request.getRequestURI().toString().equals(request.getContextPath() + "/principal/home.do")) {
+			  session.setAttribute("urlnavegation", request.getRequestURI());
+		  }		  
+		  
 		  if (usuario == null) {
 			  chain.doFilter(req, resp);
 			  return;
@@ -75,8 +78,9 @@ public class FiltroAcesso implements Filter {
 		  
 		  
 	    
+
 		  if (session.getAttribute("empresa") == null && !urlLogin.equals("/home.do") && !urlLogin.equals("/carregaEmpresa.do")) {
-			   request.getServletContext().getRequestDispatcher("/principal/carregaEmpresa.do").forward(req, resp);
+			  request.getServletContext().getRequestDispatcher("/principal/carregaEmpresa.do").forward(req, resp);
 			   return;
 		   }
 		   

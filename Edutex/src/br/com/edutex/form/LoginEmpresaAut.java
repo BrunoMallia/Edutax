@@ -53,6 +53,9 @@ public class LoginEmpresaAut extends Action {
 					     empresasLista.add(usuarioSessao.getUsuarioEmpresas().get(i).getEmpresa());
 				}
 				
+			
+				
+				
 				 
 				if (empresasLista.isEmpty()) {
 					request.setAttribute("falha", MensagemProp.getPropriedades().getProperty("aut.login.erro.empresa").toString());

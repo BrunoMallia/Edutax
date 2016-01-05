@@ -88,11 +88,11 @@
 			  
 
 		
-		<action path="/gerencial/gerarRelatorio" type="br.com.edutex.form.GerarRelatorioForm">
+		<action path="/gerencial/gerarRelatorio" type="br.com.edutex.form.GerarRelatorioForm" scope="request">
 			<forward name="sucess" path="/WEB-INF/pages/gerar_relatorio.jsp" />
 		</action>
 		
-		<action  path="/gerencial/escolherRelatorio" type="br.com.edutex.form.CarregarParametrosRelatorioForm">
+		<action  path="/gerencial/escolherRelatorio" type="br.com.edutex.form.CarregarParametrosRelatorioForm" scope="request" >
 		 	<forward  name="sucess" path="/WEB-INF/pages/gerar_relatorio.jsp" />
 		 </action>
 		
